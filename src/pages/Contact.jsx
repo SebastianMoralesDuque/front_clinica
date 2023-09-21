@@ -1,8 +1,12 @@
 import React from 'react'
+import Ui from './Ui'
 
 function Contact() {
   return (
-    <div>cambio</div>
+    <>
+    <Ui />
+    <div>asd</div>
+    </>
   )
 }
 
