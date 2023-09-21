@@ -88,112 +88,130 @@ const RegisterModal = ({ closeModal }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center" onClick={handleOutsideClick}>
-      <div className="bg-white rounded-lg p-8" ref={modalRef}>
-        <h2 className="text-2xl font-semibold mb-4">Regístrate</h2>
+      <div className="bg-white rounded-lg p-4 max-w-lg" ref={modalRef}>
+        <h2 className="text-xl font-semibold mb-2 text-center">Regístrate</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            placeholder="Nombre Completo"
-            name="nombreCompleto"
-            id="nombreCompleto"
-            value={formData.nombreCompleto}
-            onChange={handleInputChange}
-            required
-            className="w-full border rounded px-3 py-2"
-          />
-          <input
-            type="text"
-            placeholder="Cédula"
-            name="cedula"
-            id="cedula"
-            value={formData.cedula}
-            onChange={handleInputChange}
-            required
-            className="w-full border rounded px-3 py-2"
-          />
-          <input
-            type="text"
-            placeholder="Teléfono"
-            name="telefono"
-            id="telefono"
-            value={formData.telefono}
-            onChange={handleInputChange}
-            required
-            className="w-full border rounded px-3 py-2"
-          />
-
-          <div>
-            <label htmlFor="departamento" className="block text-gray-800 font-medium mb-1">Selecciona el departamento:</label>
-            <select
-              className="form-select w-full border rounded px-3 py-2"
-              id="departamento"
-              name="departamento"
-              value={formData.departamento}
-              onChange={handleInputChange}
-            >
-              <option disabled value="">Selecciona el departamento</option>
-              {departamentos.map((departamento) => (
-                <option key={departamento.state_name} value={departamento.state_name}>
-                  {departamento.state_name}
-                </option>
-              ))}
-            </select>
+          <div className="flex flex-wrap -mx-2">
+            <div className="w-1/2 px-2">
+              <input
+                type="text"
+                placeholder="Nombre Completo"
+                name="nombreCompleto"
+                id="nombreCompleto"
+                value={formData.nombreCompleto}
+                onChange={handleInputChange}
+                required
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
+            <div className="w-1/2 px-2">
+              <input
+                type="text"
+                placeholder="Cédula"
+                name="cedula"
+                id="cedula"
+                value={formData.cedula}
+                onChange={handleInputChange}
+                required
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
           </div>
 
-          <div>
-            <label htmlFor="ciudad" className="block text-gray-800 font-medium mb-1">Selecciona una ciudad:</label>
-            <select
-              className="form-select w-full border rounded px-3 py-2"
-              id="ciudad"
-              name="ciudad"
-              value={formData.ciudad}
-              onChange={handleInputChange}
-            >
-              <option disabled selected value="">Selecciona una ciudad</option>
-              {ciudades.map((ciudad) => (
-                <option key={ciudad.city_name} value={ciudad.city_name}>
-                  {ciudad.city_name}
-                </option>
-              ))}
-            </select>
+          <div className="flex flex-wrap -mx-2">
+            <div className="w-1/2 px-2">
+              <input
+                type="text"
+                placeholder="Teléfono"
+                name="telefono"
+                id="telefono"
+                value={formData.telefono}
+                onChange={handleInputChange}
+                required
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
+            <div className="w-1/2 px-2">
+              <input
+                type="text"
+                placeholder="Email"
+                name="email"
+                id="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                required
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
           </div>
 
-          <input
-            type="text"
-            placeholder="Email"
-            name="email"
-            id="email"
-            value={formData.email}
-            onChange={handleInputChange}
-            required
-            className="w-full border rounded px-3 py-2"
-          />
-
-          <input
-            type="password"
-            placeholder="Contraseña"
-            name="contrasena"
-            id="contrasena"
-            value={formData.contrasena}
-            onChange={handleInputChange}
-            required
-            className="w-full border rounded px-3 py-2"
-          />
-
-          {/* Campo "Seleccione una foto" mejorado */}
-          <div>
-            <label htmlFor="foto" className="block text-gray-800 font-medium mb-1">Seleccione una foto:</label>
-            <input
-              type="file"
-              id="foto"
-              name="foto"
-              accept="image/*"
-              onChange={handleInputChange}
-              className="block w-full border rounded-full py-2 px-4 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+          <div className="flex flex-wrap -mx-2">
+            <div className="w-1/2 px-2">
+              <label htmlFor="departamento" className="block text-gray-800 font-medium mb-1">Departamento</label>
+              <select
+                className="form-select w-full border rounded px-3 py-2"
+                id="departamento"
+                name="departamento"
+                value={formData.departamento}
+                onChange={handleInputChange}
+              >
+                <option disabled value="">Selecciona</option>
+                {departamentos.map((departamento) => (
+                  <option key={departamento.state_name} value={departamento.state_name}>
+                    {departamento.state_name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="w-1/2 px-2">
+              <label htmlFor="ciudad" className="block text-gray-800 font-medium mb-1">Municipio</label>
+              <select
+                className="form-select w-full border rounded px-3 py-2"
+                id="ciudad"
+                name="ciudad"
+                value={formData.ciudad}
+                onChange={handleInputChange}
+              >
+                <option disabled selected value="">Selecciona</option>
+                {ciudades.map((ciudad) => (
+                  <option key={ciudad.city_name} value={ciudad.city_name}>
+                    {ciudad.city_name}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
-          <div className="text-center">
+          <div className="flex flex-wrap -mx-2">
+            <div className="w-full px-2">
+              <input
+                type="password"
+                placeholder="Contraseña"
+                name="contrasena"
+                id="contrasena"
+                value={formData.contrasena}
+                onChange={handleInputChange}
+                required
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-wrap -mx-2">
+            <div className="w-full px-2">
+              <label htmlFor="foto" className="block text-gray-800 font-medium mb-1">Foto</label>
+              <input
+                type="file"
+                id="foto"
+                name="foto"
+                accept="image/*"
+                onChange={handleInputChange}
+                className="block w-full border rounded py-2 px-4 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+
+          <div className="text-center mt-4">
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
               type="submit"
