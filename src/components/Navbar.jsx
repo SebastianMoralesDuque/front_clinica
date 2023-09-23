@@ -20,10 +20,10 @@ const Navbar = () => {
       </div>
       <ul className="flex space-x-4 items-center"> {/* Añade items-center aquí */}
         <li>
-          <Link to="/about" className="text-white hover:text-blue-500 transition duration-300">Acerca de</Link>
+          <Link to="/historialMedico" className="text-white hover:text-blue-500 transition duration-300">Historial Médico</Link>
         </li>
         <li>
-          <Link to="/contact" className="text-white hover:text-blue-500 transition duration-300">Contacto</Link>
+          <Link to="/pqrs" className="text-white hover:text-blue-500 transition duration-300">Pqrs</Link>
         </li>
         <li>
           <button

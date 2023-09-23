@@ -1,13 +1,13 @@
 import React from 'react'
 import Ui from './Ui'
 
-function Contact() {
+function Pqrs() {
   return (
     <>
     <Ui />
-    <div>asd</div>
+    <div>Pqrs</div>
     </>
   )
 }
 
-export default Contact
+export default Pqrs
