@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Pagination from '../components/Pagination';
+import Pagination from '../../components/Pagination';
 import { citasPendientes, citasAnteriores } from './Data';
-import AgendarCitaModal from '../components/AgendarCitaModal';
+import AgendarCitaModal from '../../components/AgendarCitaModal';
 
 function Home() {
   const nombrePaciente = "Sebastian Morales";
