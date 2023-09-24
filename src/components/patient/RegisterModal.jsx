@@ -198,6 +198,7 @@ const RegisterModal = ({ closeModal }) => {
     }
   }, [authToken, formData.departamento]);
 
+  
   return (
     <div className="fixed inset-0 flex items-center justify-center" onClick={handleOutsideClick}>
       <div className="bg-white rounded-lg p-4 max-w-lg" ref={modalRef}>
@@ -380,7 +381,19 @@ const RegisterModal = ({ closeModal }) => {
               </select>
             </div>
           </div>
-
+          <div className="flex flex-wrap -mx-2">
+  <div className="w-full px-2">
+    <label htmlFor="fotoPerfil" className="block text-gray-800 font-medium mb-1">Foto de Perfil</label>
+    <input
+      type="file"
+      accept=".jpg, .jpeg, .png"
+      name="fotoPerfil"
+      id="fotoPerfil"
+      onChange={handleInputChange}
+      className="w-full border rounded px-3 py-2"
+    />
+  </div>
+</div>
           <div className="text-center mt-4">
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
