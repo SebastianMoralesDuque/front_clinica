@@ -8,7 +8,7 @@ import obtenerEps from '../../services/epsService'; // Importa la función aquí
 
 const RegisterModal = ({ closeModal }) => {
   const modalRef = useRef(null);
-  
+
   const [formData, setFormData] = useState({
     nombreCompleto: '',
     cedula: '',
@@ -65,18 +65,18 @@ const RegisterModal = ({ closeModal }) => {
     e.preventDefault();
     console.log('Formulario de registro enviado con datos:', formData);
     closeModal();
-  
+
     try {
       // Datos para la primera petición
       const data1 = {
-        cedula_usuario: formData.cedula,
+        cedula: formData.cedula,
         nombre: formData.nombreCompleto,
         contrasena: formData.contrasena,
         email: formData.email,
         telefono: formData.telefono,
         ciudad: formData.ciudad,
       };
-  
+
       // Realizar la primera petición a http://localhost:9009/usuarios/gestion
       const response1 = await fetch('http://localhost:9009/usuarios/gestion', {
         method: 'POST',
@@ -85,22 +85,22 @@ const RegisterModal = ({ closeModal }) => {
         },
         body: JSON.stringify(data1),
       });
-  
+
       if (response1.ok) {
         console.log('Primera petición exitosa');
-        
+
         // Obtener la respuesta JSON que debe contener la ID del usuario creado
         const usuarioCreado = await response1.json();
-        
+
         // Datos para la segunda petición
         const data2 = {
-          cedula_usuario: formData.cedula, 
+          cedula_usuario: formData.cedula,
           fecha_nacimiento: formData.fechaNacimiento,
           alergias: formData.alergias,
           eps: formData.eps,
           tipo_sangre: formData.tipoSangre
         };
-    
+
         // Realizar la segunda petición a http://localhost:9009/usuarios/gestion/pacientes
         const response2 = await fetch('http://localhost:9009/usuarios/gestion/pacientes', {
           method: 'POST',
@@ -109,21 +109,25 @@ const RegisterModal = ({ closeModal }) => {
           },
           body: JSON.stringify(data2),
         });
-    
+
         if (response2.ok) {
           console.log('Segunda petición exitosa');
-          
+
           // Datos para la tercera petición (enviar el archivo de la foto de perfil y la cédula)
           const data3 = new FormData();
-          data3.append('fotoPerfil', formData.fotoPerfil); // 'fotoPerfil' es el nombre del campo de archivo de la foto de perfil
+          data3.append('url_foto', formData.fotoPerfil); // 'fotoPerfil' es el nombre del campo de archivo de la foto de perfil
           data3.append('cedula', formData.cedula); // Agregar la cédula
-    
+
           // Realizar la tercera petición para enviar el archivo de la foto de perfil y la cédula a http://localhost:9009/usuarios/gestion/foto
           const response3 = await fetch('http://localhost:9009/usuarios/gestion/foto', {
             method: 'POST',
+            mode: 'no-cors',
             body: data3,
+            headers: {
+              // Asegúrate de incluir el encabezado adecuado para el tipo de medio esperado
+              'Content-Type': 'multipart/form-data',
+            },
           });
-    
           if (response3.ok) {
             console.log('Tercera petición exitosa (envío de archivo de la foto de perfil y cédula)');
           } else {
@@ -140,7 +144,7 @@ const RegisterModal = ({ closeModal }) => {
     }
   };
 
-  
+
 
   useEffect(() => {
     const obtenerToken = async () => {
@@ -164,7 +168,7 @@ const RegisterModal = ({ closeModal }) => {
         console.error('Error al obtener datos de EPS:', error);
       }
     };
-  
+
     cargarEps();
   }, []);
 
@@ -198,12 +202,12 @@ const RegisterModal = ({ closeModal }) => {
     }
   }, [authToken, formData.departamento]);
 
-  
+
   return (
     <div className="fixed inset-0 flex items-center justify-center" onClick={handleOutsideClick}>
       <div className="bg-white rounded-lg p-4 max-w-lg" ref={modalRef}>
         <h2 className="text-xl font-semibold mb-2 text-center">Regístrate</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4" encType="multipart/form-data">
           <div className="flex flex-wrap -mx-2">
             <div className="w-1/2 px-2">
               <input
@@ -325,23 +329,23 @@ const RegisterModal = ({ closeModal }) => {
               />
             </div>
             <div className="w-1/2 px-2">
-  <label htmlFor="eps" className="block text-gray-800 font-medium mb-1">EPS</label>
-  <select
-    className="form-select w-full border rounded px-3 py-2"
-    id="eps"
-    name="eps"
-    value={formData.eps}
-    onChange={handleInputChange}
-    required
-  >
-    <option disabled value="">Selecciona</option>
-    {epsList.map((eps) => (
-      <option key={eps.nombre} value={eps.nombre}>
-        {eps.nombre}
-      </option>
-    ))}
-  </select>
-</div>
+              <label htmlFor="eps" className="block text-gray-800 font-medium mb-1">EPS</label>
+              <select
+                className="form-select w-full border rounded px-3 py-2"
+                id="eps"
+                name="eps"
+                value={formData.eps}
+                onChange={handleInputChange}
+                required
+              >
+                <option disabled value="">Selecciona</option>
+                {epsList.map((eps) => (
+                  <option key={eps.nombre} value={eps.nombre}>
+                    {eps.nombre}
+                  </option>
+                ))}
+              </select>
+            </div>
 
           </div>
 
@@ -382,18 +386,18 @@ const RegisterModal = ({ closeModal }) => {
             </div>
           </div>
           <div className="flex flex-wrap -mx-2">
-  <div className="w-full px-2">
-    <label htmlFor="fotoPerfil" className="block text-gray-800 font-medium mb-1">Foto de Perfil</label>
-    <input
-      type="file"
-      accept=".jpg, .jpeg, .png"
-      name="fotoPerfil"
-      id="fotoPerfil"
-      onChange={handleInputChange}
-      className="w-full border rounded px-3 py-2"
-    />
-  </div>
-</div>
+            <div className="w-full px-2">
+              <label htmlFor="fotoPerfil" className="block text-gray-800 font-medium mb-1">Foto de Perfil</label>
+              <input
+                type="file"
+                accept=".jpg, .jpeg, .png"
+                name="fotoPerfil"
+                id="fotoPerfil"
+                onChange={handleInputChange}
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
+          </div>
           <div className="text-center mt-4">
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
