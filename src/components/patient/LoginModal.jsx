@@ -1,10 +1,12 @@
 import React, { useRef, useState } from 'react';
 import RegisterModal from './RegisterModal';
+import PasswordRecoveryModal from './PasswordRecoveryModal'; // Importa el componente de recuperación de contraseña
 
 const LoginModal = ({ closeModal }) => {
   const modalRef = useRef(null);
   const [showLoginModal, setShowLoginModal] = useState(true);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const [showPasswordRecoveryModal, setShowPasswordRecoveryModal] = useState(false); // Nuevo estado para el modal de recuperación de contraseña
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -19,6 +21,12 @@ const LoginModal = ({ closeModal }) => {
   const toggleRegisterModal = () => {
     setShowLoginModal(false);
     setShowRegisterModal(!showRegisterModal);
+  };
+
+  const togglePasswordRecoveryModal = () => {
+    setShowLoginModal(false); // Oculta el formulario de inicio de sesión
+    setShowRegisterModal(false); // Oculta el formulario de registro
+    setShowPasswordRecoveryModal(!showPasswordRecoveryModal);
   };
 
   const handleInputChange = (e) => {
@@ -70,6 +78,7 @@ const LoginModal = ({ closeModal }) => {
                 />
               </div>
               <p className="text-gray-600 text-sm text-center mb-4">¿No tienes una cuenta? <span className="text-blue-500 cursor-pointer" onClick={toggleRegisterModal}>Regístrate</span></p>
+              <p className="text-gray-600 text-sm text-center mb-4">Olvidó su contraseña? <span className="text-blue-500 cursor-pointer" onClick={togglePasswordRecoveryModal}>recupérela aquí</span></p>
               <div className="text-center">
                 <button
                   type="submit"
@@ -84,6 +93,10 @@ const LoginModal = ({ closeModal }) => {
 
         {showRegisterModal ? (
           <RegisterModal closeModal={closeModal} /> 
+        ) : null}
+
+        {showPasswordRecoveryModal ? (
+          <PasswordRecoveryModal closeModal={togglePasswordRecoveryModal} />
         ) : null}
       </div>
     </div>

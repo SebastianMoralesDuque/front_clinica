@@ -10,7 +10,7 @@ import PqrsAdmin from './pages/admin/PqrsAdmin'; // Asegúrate de que la ruta se
 import HistorialConsultasMed from './pages/admin/HistorialConsultasMed'; // Asegúrate de que la ruta sea correcta según tu estructura de carpetas
 import CrudMed from './pages/admin/CrudMed';
 import Ejemplo from './Ejemplo';
-
+import InformacionPaciente from './pages/patient/InformacionPaciente';
 import HomeMedico from './pages/doctor/Home'
 import AtenderCita from './pages/doctor/AtenderCita';
 
@@ -23,6 +23,7 @@ const AppRoutes = () => {
         <Route path="/" element={<Home />} />
         <Route path="/historialMedico" element={<HistorialMedico />} />
         <Route path="/pqrs" element={<Pqrs />} />
+        <Route path="/informacionPaciente" element={<InformacionPaciente />} />
         
         <Route path="/inicioMedico" element={<HomeMedico/>}/>
         <Route path="/atenderCita/:id" element={<AtenderCita />} />
@@ -32,7 +33,8 @@ const AppRoutes = () => {
         <Route path="/pqrsadmin" element={<PqrsAdmin />} />
         <Route path="/historialconsultasmed" element={<HistorialConsultasMed />} />
         <Route path="/crudmed" element={<CrudMed />} />
-        <Route path="/ejemplo" element={<Ejemplo />} />
+   
+        
       </Routes>
     </Router>
   );
