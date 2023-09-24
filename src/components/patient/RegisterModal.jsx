@@ -17,17 +17,17 @@ const RegisterModal = ({ closeModal }) => {
     ciudad: '',
     email: '',
     contrasena: '',
-    foto: null, // Campo para la foto
-    fechaNacimiento: null, // Campo para la fecha de nacimiento
+    fotoPerfil: null, // Nuevo campo para la foto de perfil
+    fechaNacimiento: null,
     eps: '',
     alergias: '',
-    tipoSangre: '', // Campo para el tipo de sangre
+    tipoSangre: '',
   });
 
   const [departamentos, setDepartamentos] = useState([]);
   const [ciudades, setCiudades] = useState([]);
   const [authToken, setAuthToken] = useState('');
-  const [epsList, setEpsList] = useState([]); // Estado para almacenar la lista de EPS
+  const [epsList, setEpsList] = useState([]);
 
   const handleOutsideClick = (e) => {
     if (modalRef.current && !modalRef.current.contains(e.target)) {
@@ -37,13 +37,21 @@ const RegisterModal = ({ closeModal }) => {
 
   const handleInputChange = (e) => {
     const { name, value, type } = e.target;
-    // Si el campo es de tipo archivo, guarda el archivo seleccionado
-    const newValue = type === 'file' ? e.target.files[0] : value;
 
-    setFormData({
-      ...formData,
-      [name]: newValue,
-    });
+    if (type === 'file') {
+      // Si el campo es de tipo archivo, guarda el archivo seleccionado
+      const newValue = e.target.files[0];
+      setFormData({
+        ...formData,
+        [name]: newValue,
+      });
+    } else {
+      // Para otros campos, simplemente actualiza el valor
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   };
 
   const handleFechaNacimientoChange = (date) => {
@@ -61,7 +69,7 @@ const RegisterModal = ({ closeModal }) => {
     try {
       // Datos para la primera petición
       const data1 = {
-        cedula: formData.cedula,
+        cedula_usuario: formData.cedula,
         nombre: formData.nombreCompleto,
         contrasena: formData.contrasena,
         email: formData.email,
@@ -86,11 +94,11 @@ const RegisterModal = ({ closeModal }) => {
         
         // Datos para la segunda petición
         const data2 = {
-          fechaNacimiento: formData.fechaNacimiento,
+          cedula_usuario: formData.cedula, 
+          fecha_nacimiento: formData.fechaNacimiento,
           alergias: formData.alergias,
-          cedulaPaciente: formData.cedula,
           eps: formData.eps,
-          tipoSangre: formData.tipoSangre,
+          tipo_sangre: formData.tipoSangre
         };
     
         // Realizar la segunda petición a http://localhost:9009/usuarios/gestion/pacientes
@@ -105,21 +113,21 @@ const RegisterModal = ({ closeModal }) => {
         if (response2.ok) {
           console.log('Segunda petición exitosa');
           
-          // Datos para la tercera petición (enviar el archivo y la cédula)
+          // Datos para la tercera petición (enviar el archivo de la foto de perfil y la cédula)
           const data3 = new FormData();
-          data3.append('foto', formData.archivo); // 'archivo' es el nombre del campo de archivo
+          data3.append('fotoPerfil', formData.fotoPerfil); // 'fotoPerfil' es el nombre del campo de archivo de la foto de perfil
           data3.append('cedula', formData.cedula); // Agregar la cédula
     
-          // Realizar la tercera petición para enviar el archivo y la cédula a http://localhost:9009/usuarios/gestion/foto
+          // Realizar la tercera petición para enviar el archivo de la foto de perfil y la cédula a http://localhost:9009/usuarios/gestion/foto
           const response3 = await fetch('http://localhost:9009/usuarios/gestion/foto', {
             method: 'POST',
             body: data3,
           });
     
           if (response3.ok) {
-            console.log('Tercera petición exitosa (envío de archivo y cédula)');
+            console.log('Tercera petición exitosa (envío de archivo de la foto de perfil y cédula)');
           } else {
-            console.error('Error en la tercera petición (envío de archivo y cédula)');
+            console.error('Error en la tercera petición (envío de archivo de la foto de perfil y cédula)');
           }
         } else {
           console.error('Error en la segunda petición');
@@ -131,7 +139,7 @@ const RegisterModal = ({ closeModal }) => {
       console.error('Error al realizar las peticiones:', error);
     }
   };
-  
+
   
 
   useEffect(() => {

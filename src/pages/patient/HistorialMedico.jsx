@@ -25,6 +25,15 @@ function HistorialMedico() {
       tratamiento: 'Tratamiento: Reposo, hidratación y dieta blanda.',
       notasMedicas: 'Notas Médicas: El paciente debe seguir el tratamiento y evitar alimentos irritantes.',
     },
+    {
+      id: 3,
+      fecha: '2023-09-05',
+      medico: 'Dr. Carlos Rodríguez',
+      motivo: 'Atención de la Cita: Fiebre persistente',
+      diagnostico: 'Diagnóstico: Infección viral.',
+      tratamiento: 'Tratamiento: Antipiréticos y descanso.',
+      notasMedicas: 'Notas Médicas: El paciente debe controlar la fiebre y beber líquidos abundantes.',
+    },
     // Puedes agregar más consultas ficticias aquí
   ];
 
@@ -60,49 +69,67 @@ function HistorialMedico() {
   };
 
   return (
-    <div>
-      <h2>Historial Médico</h2>
-      <div>
-        <label>Filtrar por Médico:</label>
+    <div className="p-4">
+      <h2 className="text-2xl font-bold mb-4">Historial Médico</h2>
+      <div className="mb-4">
+        <label className="mr-2">Filtrar por Médico:</label>
         <input
           type="text"
           value={filtroMedico}
           onChange={(e) => setFiltroMedico(e.target.value)}
+          className="border rounded px-2 py-1"
         />
       </div>
-      <div>
-        <label>Filtrar por Fecha:</label>
+      <div className="mb-4">
+        <label className="mr-2">Filtrar por Fecha:</label>
         <input
           type="text"
           value={filtroFecha}
           onChange={(e) => setFiltroFecha(e.target.value)}
+          className="border rounded px-2 py-1"
         />
       </div>
-      <div>
-        <h3>Consultas</h3>
+      <div className="mb-4">
+        <h3 className="text-lg font-semibold mb-2">Consultas</h3>
         <ul>
           {filtrarConsultas().map((consulta) => (
-            <li key={consulta.id}>
-              {consulta.fecha} - {consulta.medico}
-              <button onClick={() => mostrarDetallesConsulta(consulta)}>
-                Ver Detalles
-              </button>
+            <li key={consulta.id} className="mb-2">
+              <div className="flex justify-between items-center">
+                <div>
+                  <span className="text-gray-600">
+                    {consulta.fecha} - {consulta.medico}
+                  </span>
+                </div>
+                <div>
+                  <button
+                    onClick={() => mostrarDetallesConsulta(consulta)}
+                    className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+                  >
+                    Ver Detalles
+                  </button>
+                </div>
+              </div>
             </li>
           ))}
         </ul>
       </div>
       {consultaSeleccionada && (
-        <div>
-          <h3>Detalles de la Consulta</h3>
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold mb-2">Detalles de la Consulta</h3>
           <p>{consultaSeleccionada.motivo}</p>
           <p>{consultaSeleccionada.diagnostico}</p>
           <p>{consultaSeleccionada.tratamiento}</p>
           <p>{consultaSeleccionada.notasMedicas}</p>
-          <button onClick={cerrarDetallesConsulta}>Cerrar Detalles</button>
+          <button
+            onClick={cerrarDetallesConsulta}
+            className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+          >
+            Cerrar Detalles
+          </button>
         </div>
       )}
       <div>
-        <h3>Información del Paciente</h3>
+        <h3 className="text-lg font-semibold mb-2">Información del Paciente</h3>
         <p>{pacienteInfo.fechaNacimiento}</p>
         <p>{pacienteInfo.alergias}</p>
         <p>{pacienteInfo.eps}</p>
