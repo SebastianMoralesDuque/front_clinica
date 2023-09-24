@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Pagination from '../Pagination'; // Asegúrate de importar la paginación si no lo has hecho
+import Pagination from '../patient/Pagination'; // Asegúrate de importar la paginación si no lo has hecho
 import { citasPendientes } from '../../pages/doctor/Data'; // Importa tus datos de citas pendientes
 import { Link } from 'react-router-dom';
 
