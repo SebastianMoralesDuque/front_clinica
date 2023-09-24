@@ -70,7 +70,51 @@ const citasPendientes = [
           },
         // Agrega más citas anteriores aquí si es necesario
       ];
-  
-
-  
-  export { citasPendientes, citasAnteriores };  
+      const pqrsList = [
+        {
+          fecha: '23/09/2023',
+          tipo: 'Solicitud de información',
+          motivo: 'Consulta sobre medicamentos',
+          activa: true,
+        },
+        {
+          fecha: '22/09/2023',
+          tipo: 'Reclamación',
+          motivo: 'Mala atención en la consulta',
+          activa: false,
+        },
+        {
+          fecha: '21/09/2023',
+          tipo: 'Sugerencia',
+          motivo: 'Mejoras en la recepción',
+          activa: true,
+        },
+        {
+          fecha: '21/09/2023',
+          tipo: 'Sugerencia',
+          motivo: 'Mejoras en la recepción',
+          activa: true,
+        },
+        {
+          fecha: '21/09/2023',
+          tipo: 'Sugerencia',
+          motivo: 'Mejoras en la recepción',
+          activa: false,
+        },
+        {
+          fecha: '21/09/2023',
+          tipo: 'Sugerencia',
+          motivo: 'Mejoras en la recepción',
+          activa: false,
+        },
+        {
+          fecha: '21/09/2023',
+          tipo: 'Sugerencia',
+          motivo: 'Mejoras en la recepción',
+          activa: false,
+        },
+        // Agrega más PQRs aquí si es necesario
+      ];
+      
+      
+      export { citasPendientes, citasAnteriores, pqrsList };

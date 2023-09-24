@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import Pagination from '../../components/Pagination';
+import Pagination from '../../components/patient/Pagination';
 import { citasPendientes, citasAnteriores } from './Data';
-import AgendarCitaModal from '../../components/AgendarCitaModal';
+import AgendarCitaModal from '../../components/patient/AgendarCitaModal';
+import PqrModal from '../../components/patient/PqrModal'; // Importa el nuevo componente
+import 'react-datepicker/dist/react-datepicker.css';
 
 function Home() {
   const nombrePaciente = "Sebastian Morales";
@@ -9,6 +11,35 @@ function Home() {
   const [paginaPendientes, setPaginaPendientes] = useState(0);
   const [paginaAnteriores, setPaginaAnteriores] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
+  const [pqrModalVisible, setPqrModalVisible] = useState(false); // Estado para mostrar el modal PQR
+  const [selectedCitaId, setSelectedCitaId] = useState(null); // Estado para almacenar el ID de la cita seleccionada
+  const [formularioCita, setFormularioCita] = useState({
+    especializacion: '',
+    medico: '',
+    fecha: null, 
+    hora: '',
+    motivo: '',
+  });
+  const [especializaciones] = useState([
+    'Especialización 1',
+    'Especialización 2',
+    // Agrega más especializaciones según tus necesidades
+  ]);
+
+  const [medicosDisponibles, setMedicosDisponibles] = useState({
+    'Especialización 1': [
+      { nombre: 'Dr. Juan Pérez', horarios: ['9:00 AM - 11:00 AM', '2:00 PM - 4:00 PM'] },
+      // Agrega más médicos y sus horarios según la especialización
+    ],
+    'Especialización 2': [
+      { nombre: 'Dra. María González', horarios: ['10:00 AM - 12:00 PM', '3:00 PM - 5:00 PM'] },
+      // Agrega más médicos y sus horarios según la especialización
+    ],
+    // Agrega más especializaciones y sus médicos disponibles
+  });
+
+  const [horariosMedico, setHorariosMedico] = useState([]);
+  const [fechaSeleccionada, setFechaSeleccionada] = useState(null); // Estado para la fecha seleccionada
 
   const paginarCitasPendientes = (data) => {
     const indiceInicio = paginaPendientes * elementosPorPagina;
@@ -39,6 +70,40 @@ function Home() {
   const handleAgendarCita = (cita) => {
     // Aquí puedes agregar la lógica para guardar la cita
     alert("Cita agendada con éxito");
+  };
+
+  const handleGenerarPQRClick = (citaId) => {
+    setSelectedCitaId(citaId);
+    setPqrModalVisible(true);
+  };
+
+  const handleFechaChange = (date) => {
+    setFechaSeleccionada(date);
+    setFormularioCita({
+      ...formularioCita,
+      fecha: date,
+    });
+    // Obtener los horarios disponibles del médico seleccionado para la fecha seleccionada
+    const medicoSeleccionado = formularioCita.medico;
+    if (medicoSeleccionado) {
+      const horarios = medicosDisponibles[formularioCita.especializacion].find(
+        (medico) => medico.nombre === medicoSeleccionado
+      ).horarios;
+      setHorariosMedico(horarios);
+    }
+  };
+
+  const handleFormularioChange = (e) => {
+    const { name, value } = e.target;
+    setFormularioCita({
+      ...formularioCita,
+      [name]: value,
+    });
+    // Si se cambia la especialización o el médico, resetear la fecha y los horarios
+    if (name === 'especializacion' || name === 'medico') {
+      setFechaSeleccionada(null);
+      setHorariosMedico([]);
+    }
   };
 
   return (
@@ -127,7 +192,19 @@ function Home() {
         modalVisible={modalVisible}
         closeModal={closeModal}
         handleAgendarCita={handleAgendarCita}
+        formularioCita={formularioCita}
+        especializaciones={especializaciones}
+        medicosDisponibles={medicosDisponibles}
+        fechaSeleccionada={fechaSeleccionada}
+        horariosMedico={horariosMedico}
+        handleFormularioChange={handleFormularioChange}
+        handleFechaChange={handleFechaChange}
       />
+
+      {/* Agregar el modal PQR */}
+      {pqrModalVisible && (
+        <PqrModal citaId={selectedCitaId} closeModal={() => setPqrModalVisible(false)} />
+      )}
     </div>
   );
 }
