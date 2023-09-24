@@ -8,6 +8,7 @@ import HomeAdmin from './pages/admin/HomeAdmin'; // Asegúrate de que la ruta se
 import CreateMedico from './pages/admin/CreateMedico'; // Asegúrate de que la ruta sea correcta según tu estructura de carpetas
 import PqrsAdmin from './pages/admin/PqrsAdmin'; // Asegúrate de que la ruta sea correcta según tu estructura de carpetas
 import HistorialConsultasMed from './pages/admin/HistorialConsultasMed'; // Asegúrate de que la ruta sea correcta según tu estructura de carpetas
+import CrudMed from './pages/admin/CrudMed';
 
 const AppRoutes = () => {
   return (
@@ -21,9 +22,10 @@ const AppRoutes = () => {
         <Route path="/createmedico" element={<CreateMedico />} />
         <Route path="/pqrsadmin" element={<PqrsAdmin />} />
         <Route path="/historialconsultasmed" element={<HistorialConsultasMed />} />
+        <Route path="/crudmed" element={<CrudMed />} />
       </Routes>
     </Router>
   );
-}
+} 
 
 export default AppRoutes;
