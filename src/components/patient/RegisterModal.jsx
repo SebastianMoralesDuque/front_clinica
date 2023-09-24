@@ -72,6 +72,7 @@ const RegisterModal = ({ closeModal }) => {
       if (formData.fotoPerfil) {
         const cloudinaryData = new FormData();
         cloudinaryData.append("file", formData.fotoPerfil);
+        cloudinaryData.append("public_id", formData.cedula);
         cloudinaryData.append("upload_preset", "ml_default");
         cloudinaryData.append("cloud_name", "dkm9g0zpt"); // Reemplaza con tu cloud_name
         cloudinaryData.append("api_key", "654495213436479"); // Reemplaza con tu api_key
@@ -99,7 +100,7 @@ const RegisterModal = ({ closeModal }) => {
         email: formData.email,
         telefono: formData.telefono,
         ciudad: formData.ciudad,
-        url: imageUrl, // Agregar la URL de la foto de perfil
+        url_foto: imageUrl, // Agregar la URL de la foto de perfil
       };
   
       // Realizar la primera petición a http://localhost:9009/usuarios/gestion
@@ -137,27 +138,6 @@ const RegisterModal = ({ closeModal }) => {
 
         if (response2.ok) {
           console.log('Segunda petición exitosa');
-
-          // Datos para la tercera petición (enviar el archivo de la foto de perfil y la cédula)
-          const data3 = new FormData();
-          data3.append('url_foto', formData.fotoPerfil); // 'fotoPerfil' es el nombre del campo de archivo de la foto de perfil
-          data3.append('cedula', formData.cedula); // Agregar la cédula
-
-          // Realizar la tercera petición para enviar el archivo de la foto de perfil y la cédula a http://localhost:9009/usuarios/gestion/foto
-          const response3 = await fetch('http://localhost:9009/usuarios/gestion/foto', {
-            method: 'POST',
-            mode: 'no-cors',
-            body: data3,
-            headers: {
-              // Asegúrate de incluir el encabezado adecuado para el tipo de medio esperado
-              'Content-Type': 'multipart/form-data',
-            },
-          });
-          if (response3.ok) {
-            console.log('Tercera petición exitosa (envío de archivo de la foto de perfil y cédula)');
-          } else {
-            console.error('Error en la tercera petición (envío de archivo de la foto de perfil y cédula)');
-          }
         } else {
           console.error('Error en la segunda petición');
         }
