@@ -6,6 +6,10 @@ import Pqrs from './pages/patient/Pqrs';
 import Navbar from './components/Navbar';
 import EjemploPage from './pages/admin/EjemploPage'; // Asegúrate de que la ruta sea correcta según tu estructura de carpetas
 
+import HomeMedico from './pages/doctor/Home'
+import AtenderCita from './pages/doctor/AtenderCita';
+
+
 const AppRoutes = () => {
   return (
     <Router>
@@ -15,6 +19,8 @@ const AppRoutes = () => {
         <Route path="/historialMedico" element={<HistorialMedico />} />
         <Route path="/pqrs" element={<Pqrs />} />
         <Route path="/ejemplo" element={<EjemploPage />} />
+        <Route path="/inicioMedico" element={<HomeMedico/>}/>
+        <Route path="/atenderCita/:id" element={<AtenderCita />} />
       </Routes>
     </Router>
   );
