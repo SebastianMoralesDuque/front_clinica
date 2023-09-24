@@ -65,8 +65,32 @@ const RegisterModal = ({ closeModal }) => {
     e.preventDefault();
     console.log('Formulario de registro enviado con datos:', formData);
     closeModal();
-
+  
     try {
+      // Cargar la foto en Cloudinary
+      let imageUrl = null;
+      if (formData.fotoPerfil) {
+        const cloudinaryData = new FormData();
+        cloudinaryData.append("file", formData.fotoPerfil);
+        cloudinaryData.append("upload_preset", "ml_default");
+        cloudinaryData.append("cloud_name", "dkm9g0zpt"); // Reemplaza con tu cloud_name
+        cloudinaryData.append("api_key", "654495213436479"); // Reemplaza con tu api_key
+        cloudinaryData.append("api_secret", "PIJO3ukm6rEsZFGjOIK7gcVDV-g"); // Reemplaza con tu api_secret
+  
+        const cloudinaryResponse = await fetch("https://api.cloudinary.com/v1_1/tu_cloud_name/image/upload", {
+          method: "post",
+          body: cloudinaryData,
+        });
+  
+        if (cloudinaryResponse.ok) {
+          const cloudinaryData = await cloudinaryResponse.json();
+          imageUrl = cloudinaryData.url;
+          console.log('Foto cargada en Cloudinary con éxito:', imageUrl);
+        } else {
+          console.error('Error al cargar la foto en Cloudinary');
+        }
+      }
+  
       // Datos para la primera petición
       const data1 = {
         cedula: formData.cedula,
@@ -75,8 +99,9 @@ const RegisterModal = ({ closeModal }) => {
         email: formData.email,
         telefono: formData.telefono,
         ciudad: formData.ciudad,
+        url: imageUrl, // Agregar la URL de la foto de perfil
       };
-
+  
       // Realizar la primera petición a http://localhost:9009/usuarios/gestion
       const response1 = await fetch('http://localhost:9009/usuarios/gestion', {
         method: 'POST',
@@ -85,7 +110,7 @@ const RegisterModal = ({ closeModal }) => {
         },
         body: JSON.stringify(data1),
       });
-
+  
       if (response1.ok) {
         console.log('Primera petición exitosa');
 
