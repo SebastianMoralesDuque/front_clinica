@@ -69,7 +69,7 @@ const RegisterModal = ({ closeModal }) => {
         ciudad: formData.ciudad,
       };
   
-      // Realizar la primera petición a http://localhost:5173/usuarios/gestion
+      // Realizar la primera petición a http://localhost:9009/usuarios/gestion
       const response1 = await fetch('http://localhost:9009/usuarios/gestion', {
         method: 'POST',
         headers: {
@@ -80,37 +80,58 @@ const RegisterModal = ({ closeModal }) => {
   
       if (response1.ok) {
         console.log('Primera petición exitosa');
+        
+        // Obtener la respuesta JSON que debe contener la ID del usuario creado
+        const usuarioCreado = await response1.json();
+        
+        // Datos para la segunda petición
+        const data2 = {
+          fechaNacimiento: formData.fechaNacimiento,
+          alergias: formData.alergias,
+          cedulaPaciente: formData.cedula,
+          eps: formData.eps,
+          tipoSangre: formData.tipoSangre,
+        };
+    
+        // Realizar la segunda petición a http://localhost:9009/usuarios/gestion/pacientes
+        const response2 = await fetch('http://localhost:9009/usuarios/gestion/pacientes', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data2),
+        });
+    
+        if (response2.ok) {
+          console.log('Segunda petición exitosa');
+          
+          // Datos para la tercera petición (enviar el archivo y la cédula)
+          const data3 = new FormData();
+          data3.append('foto', formData.archivo); // 'archivo' es el nombre del campo de archivo
+          data3.append('cedula', formData.cedula); // Agregar la cédula
+    
+          // Realizar la tercera petición para enviar el archivo y la cédula a http://localhost:9009/usuarios/gestion/foto
+          const response3 = await fetch('http://localhost:9009/usuarios/gestion/foto', {
+            method: 'POST',
+            body: data3,
+          });
+    
+          if (response3.ok) {
+            console.log('Tercera petición exitosa (envío de archivo y cédula)');
+          } else {
+            console.error('Error en la tercera petición (envío de archivo y cédula)');
+          }
+        } else {
+          console.error('Error en la segunda petición');
+        }
       } else {
         console.error('Error en la primera petición');
-      }
-  
-      // Datos para la segunda petición
-      const data2 = {
-        fechaNacimiento: formData.fechaNacimiento,
-        alergias: formData.alergias,
-        cedulaPaciente: formData.cedulaPaciente,
-        eps: formData.eps,
-        tipoSangre: formData.tipoSangre,
-      };
-  
-      // Realizar la segunda petición a http://localhost:5173/usuarios/gestion/pacientes
-      const response2 = await fetch('http://localhost:9009/usuarios/gestion/pacientes', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data2),
-      });
-  
-      if (response2.ok) {
-        console.log('Segunda petición exitosa');
-      } else {
-        console.error('Error en la segunda petición');
       }
     } catch (error) {
       console.error('Error al realizar las peticiones:', error);
     }
   };
+  
   
 
   useEffect(() => {
