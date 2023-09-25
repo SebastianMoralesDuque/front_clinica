@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 function AtenderCita() {
   const [diagnostico, setDiagnostico] = useState('');
@@ -108,12 +109,14 @@ function AtenderCita() {
 
         {/* Botón para Finalizar la Atención */}
         <div className="mt-4">
+        <Link to="/inicioMedico/">
           <button
             className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
             onClick={handleGuardarAtencion}
           >
             Finalizar Atención
           </button>
+          </Link>
         </div>
       </div>
 
