@@ -1,5 +1,5 @@
 import React from 'react';
-import Routes from './Routes'; 
+import Routes from './Routes'; // Tu componente de rutas
 
 function App() {
   return (
@@ -8,5 +8,4 @@ function App() {
     </div>
   );
 }
-
 export default App;

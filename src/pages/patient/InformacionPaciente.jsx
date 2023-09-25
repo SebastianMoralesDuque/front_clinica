@@ -4,6 +4,7 @@ import EditarInformacionModal from './EditarInformacionModal'; // Importa el com
 
 function InformacionPaciente() {
   const [isEditing, setIsEditing] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false); // Estado para mostrar la confirmación de eliminación
 
   // Datos ficticios del paciente
   const pacienteInfo = {
@@ -18,6 +19,17 @@ function InformacionPaciente() {
 
   const toggleEdit = () => {
     setIsEditing(!isEditing);
+  };
+
+  const toggleDeleteConfirmation = () => {
+    setShowDeleteConfirmation(!showDeleteConfirmation);
+  };
+
+  const handleDeleteAccount = () => {
+    // Aquí debes implementar la lógica para eliminar la cuenta del paciente.
+    // Puedes mostrar un mensaje de éxito después de eliminar la cuenta.
+    // Por ahora, simplemente ocultamos la confirmación de eliminación.
+    setShowDeleteConfirmation(false);
   };
 
   return (
@@ -58,7 +70,32 @@ function InformacionPaciente() {
               >
                 Editar Información
               </button>
+              {/* Agregar el botón de eliminar cuenta y la confirmación */}
+              <button
+                onClick={toggleDeleteConfirmation}
+                className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-full focus:outline-none focus:ring focus:border-red-700 ml-4"
+              >
+                Eliminar Cuenta
+              </button>
             </div>
+            {/* Confirmación de eliminación */}
+            {showDeleteConfirmation && (
+              <div className="mt-4 text-center">
+                <p>¿Estás seguro de que deseas eliminar tu cuenta?</p>
+                <button
+                  onClick={handleDeleteAccount}
+                  className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-full focus:outline-none focus:ring focus:border-red-700 mt-2"
+                >
+                  Confirmar Eliminación
+                </button>
+                <button
+                  onClick={toggleDeleteConfirmation}
+                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold px-4 py-2 rounded-full focus:outline-none focus:ring focus:border-gray-500 mt-2 ml-2"
+                >
+                  Cancelar
+                </button>
+              </div>
+            )}
           </>
         )}
       </div>

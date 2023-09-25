@@ -120,7 +120,7 @@ const RegisterModal = ({ closeModal }) => {
 
         // Datos para la segunda petición
         const data2 = {
-          cedula_usuario: formData.cedula,
+          cedula_paciente: formData.cedula,
           fecha_nacimiento: formData.fechaNacimiento,
           alergias: formData.alergias,
           eps: formData.eps,
