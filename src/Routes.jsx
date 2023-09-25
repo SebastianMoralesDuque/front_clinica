@@ -14,7 +14,8 @@ import Ejemplo from './Ejemplo';
 import InformacionPaciente from './pages/patient/InformacionPaciente';
 import HomeMedico from './pages/doctor/Home'
 import AtenderCita from './pages/doctor/AtenderCita';
-
+import NotFoundPage from './pages/NotFoundPage';
+import MaintenancePage from './pages/MaintenancePage';
 
 const AppRoutes = () => {
   return (
@@ -36,7 +37,9 @@ const AppRoutes = () => {
         <Route path="/historialconsultasmed" element={<HistorialConsultasMed />} />
         <Route path="/crudmed" element={<CrudMed />} />
    
-        
+        <Route path="/maintenancePage" element={<MaintenancePage />} />
+        <Route path="/notFoundPage" element={<NotFoundPage />} />
+
       </Routes>
     </Router>
   );
