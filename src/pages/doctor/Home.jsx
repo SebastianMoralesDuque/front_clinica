@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import DocCitasPend from '../../components/doctor/DocCitasPend'; // Importa el componente DocCitasPend
+import DocCitasDelDia from '../../components/doctor/DocCitasDelDia'; // Importa el componente DocCitasPend
 import DocHistorialCitas from '../../components/doctor/DocHistorialCitas';
 import DoctorDayOffModal from '../../components/doctor/DoctorDayOffModal';
 import CitasPendientesModal from '../../components/doctor/CitasPendientesModal';
@@ -42,7 +42,7 @@ function Home() {
       </div>
 
       {/* Sección de Citas Pendientes */}
-      <DocCitasPend />
+      <DocCitasDelDia />
 
       {/* Sección de Historial de Citas */}
       <DocHistorialCitas />
