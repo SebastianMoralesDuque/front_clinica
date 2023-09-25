@@ -18,7 +18,7 @@ function DocCitasPend() {
 
   return (
     <div className="bg-blue-100 p-4 rounded-lg shadow-md mb-4 overflow-x-auto">
-      <h2 className="text-lg font-semibold mb-2 text-center">Citas Pendientes</h2>
+      <h2 className="text-lg font-semibold mb-2 text-center">Citas del día de hoy</h2>
       <ul className="flex justify-center">
         {paginarCitasPendientes(citasPendientes).map((cita) => (
           <li key={cita.id} className="mr-4">
@@ -29,7 +29,7 @@ function DocCitasPend() {
               <span className="block">Paciente: {cita.paciente}</span>
               <span className="block">Estado: {cita.estado}</span>
               <span className="block">Motivo: {cita.motivo}</span>
-              <Link to="/atenderCita/">
+              <Link to="/atenderCita">
                 <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mt-2">
                   Atender Cita
                 </button>
