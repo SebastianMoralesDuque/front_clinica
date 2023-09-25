@@ -33,20 +33,22 @@ function Home() {
     <div className="container mx-auto p-4">
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-3xl font-bold">Bienvenido, Dr. Botas</h1>
-        {/* Botón para abrir el modal agenda*/}
-        <button
-          className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-full focus:outline-none focus:ring focus:border-blue-700"
-          onClick={openCitasPendientesModal}
-        >
-          Agenda
-        </button>
-        {/* Botón para abrir el modal día libre*/}
-      <button
-        className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-full focus:outline-none focus:ring focus:border-blue-700"
-        onClick={openModal}
-      >
-        Registrar Día Libre
-      </button>
+        <div className="flex space-x-4"> {/* Contenedor para los botones */}
+          {/* Botón para abrir el modal agenda */}
+          <button
+            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-full focus:outline-none focus:ring focus:border-blue-700"
+            onClick={openCitasPendientesModal}
+          >
+            Agenda
+          </button>
+          {/* Botón para abrir el modal día libre */}
+          <button
+            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-full focus:outline-none focus:ring focus:border-blue-700"
+            onClick={openModal}
+          >
+            Registrar Día Libre
+          </button>
+        </div>
       </div>
 
       {/* Sección de Citas Pendientes */}
