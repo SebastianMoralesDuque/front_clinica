@@ -4,6 +4,7 @@ import Home from './pages/patient/Home';
 import HistorialMedico from './pages/patient/HistorialMedico';
 import Pqrs from './pages/patient/Pqrs';
 import Navbar from './components/patient/Navbar';
+import DoctorNavbar from './components/doctor/DoctorNavbar';
 import HomeAdmin from './pages/admin/HomeAdmin'; // Asegúrate de que la ruta sea correcta según tu estructura de carpetas
 import CreateMedico from './pages/admin/CreateMedico'; // Asegúrate de que la ruta sea correcta según tu estructura de carpetas
 import PqrsAdmin from './pages/admin/PqrsAdmin'; // Asegúrate de que la ruta sea correcta según tu estructura de carpetas

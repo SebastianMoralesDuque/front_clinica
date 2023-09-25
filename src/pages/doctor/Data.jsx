@@ -64,3 +64,28 @@ export const citasPendientes = [
         motivo: "Dolor de garganta",
     },
 ];  
+export const historialCitas = [
+    {
+      id: 1,
+      fechaAtencion: '2023-09-15',
+      paciente: 'María García',
+      diagnostico: 'Dolor abdominal, posiblemente gastroenteritis.',
+      tratamiento: 'Recetado reposo, hidratación y medicamento para aliviar el dolor.',
+    },
+    {
+      id: 2,
+      fechaAtencion: '2023-09-10',
+      paciente: 'Carlos Rodríguez',
+      diagnostico: 'Fiebre alta y dolor de garganta, posible infección viral.',
+      tratamiento: 'Recetado paracetamol y reposo en casa.',
+    },
+    {
+      id: 3,
+      fechaAtencion: '2023-09-05',
+      paciente: 'Ana López',
+      diagnostico: 'Lesión en el tobillo debido a una caída.',
+      tratamiento: 'Inmovilización del tobillo y medicación para el dolor.',
+    },
+    // Agrega más entradas de historial según sea necesario
+  ];
+  
