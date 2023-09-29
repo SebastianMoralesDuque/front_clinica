@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
+import bcrypt from 'bcryptjs';
 import 'react-datepicker/dist/react-datepicker.css';
 import getToken from '../../services/tokenService';
 import obtenerEstados from '../../services/estadoService';
@@ -61,7 +62,15 @@ const RegisterModal = ({ closeModal }) => {
     });
   };
 
+  const handlePasswordHashing = async (e) => {
+    e.preventDefault();
+    // Encriptar la contraseña antes de enviarla al backend
+    const hashedPassword = await bcrypt.hash(formData.contrasena, 10);
+    formData.contrasena = hashedPassword;
+    };
+
   const handleSubmit = async (e) => {
+    handlePasswordHashing(e);
     e.preventDefault();
     console.log('Formulario de registro enviado con datos:', formData);
     closeModal();
@@ -102,7 +111,7 @@ const RegisterModal = ({ closeModal }) => {
         ciudad: formData.ciudad,
         url_foto: imageUrl, // Agregar la URL de la foto de perfil
       };
-  
+      
       // Realizar la primera petición a http://localhost:9009/usuarios/gestion
       const response1 = await fetch('http://localhost:9009/usuarios/gestion', {
         method: 'POST',
@@ -120,7 +129,7 @@ const RegisterModal = ({ closeModal }) => {
 
         // Datos para la segunda petición
         const data2 = {
-          cedula_paciente: formData.cedula,
+          cedula_usuario: formData.cedula,
           fecha_nacimiento: formData.fechaNacimiento,
           alergias: formData.alergias,
           eps: formData.eps,
