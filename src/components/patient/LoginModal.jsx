@@ -1,16 +1,22 @@
 import React, { useRef, useState } from 'react';
 import RegisterModal from './RegisterModal';
-import PasswordRecoveryModal from './PasswordRecoveryModal'; // Importa el componente de recuperación de contraseña
+import PasswordRecoveryModal from './PasswordRecoveryModal';
 
 const LoginModal = ({ closeModal }) => {
   const modalRef = useRef(null);
-  const [showLoginModal, setShowLoginModal] = useState(true);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
-  const [showPasswordRecoveryModal, setShowPasswordRecoveryModal] = useState(false); // Nuevo estado para el modal de recuperación de contraseña
-  const [formData, setFormData] = useState({
-    email: '',
+  const [showPasswordRecoveryModal, setShowPasswordRecoveryModal] = useState(false);
+  const [formDataUser, setFormDataUser] = useState({
+    cedula: '',
     password: '',
   });
+  const [formDataAdmin, setFormDataAdmin] = useState({
+    email: '',
+    password_admin: '',
+  });
+
+  const [loginType, setLoginType] = useState('user');
+  const [showContent, setShowContent] = useState(true); // Nuevo estado
 
   const handleOutsideClick = (e) => {
     if (modalRef.current && !modalRef.current.contains(e.target)) {
@@ -18,85 +24,184 @@ const LoginModal = ({ closeModal }) => {
     }
   };
 
-  const toggleRegisterModal = () => {
-    setShowLoginModal(false);
-    setShowRegisterModal(!showRegisterModal);
+  const handleLoginTypeChange = (type) => {
+    setLoginType(type);
+    setFormDataUser({
+      cedula: '',
+      password: '',
+    });
+    setFormDataAdmin({
+      email: '',
+      password_admin: '',
+    });
   };
 
-  const togglePasswordRecoveryModal = () => {
-    setShowLoginModal(false); // Oculta el formulario de inicio de sesión
-    setShowRegisterModal(false); // Oculta el formulario de registro
-    setShowPasswordRecoveryModal(!showPasswordRecoveryModal);
-  };
-
-  const handleInputChange = (e) => {
+  const handleInputChangeUser = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormDataUser({
+      ...formDataUser,
       [name]: value,
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleInputChangeAdmin = (e) => {
+    const { name, value } = e.target;
+    setFormDataAdmin({
+      ...formDataAdmin,
+      [name]: value,
+    });
+  };
+
+  const handleSubmitUser = (e) => {
     e.preventDefault();
-    // Aquí puedes agregar la lógica para manejar el inicio de sesión con los datos en formData
-    // Por ejemplo, puedes enviar una solicitud a tu servidor para autenticar al usuario.
-    // Luego, cierra el modal si el inicio de sesión es exitoso o muestra un mensaje de error.
-    console.log('Formulario enviado con datos:', formData);
-    closeModal(); // Cierra el modal después de enviar el formulario
+    const endpoint = '/api/login/user';
+    console.log('Enviando datos a:', endpoint);
+    console.log('Datos del usuario:', formDataUser);
+    closeModal();
+  };
+
+  const handleSubmitAdmin = (e) => {
+    e.preventDefault();
+    const endpoint = '/api/login/admin';
+    console.log('Enviando datos a:', endpoint);
+    console.log('Datos del administrador:', formDataAdmin);
+    closeModal();
+  };
+
+  const toggleRegisterModal = () => {
+    setShowRegisterModal(!showRegisterModal);
+  };
+
+  const togglePasswordRecoveryModal = () => {
+    setShowContent(!showContent); // Ocultar todo lo anterior al mostrar PasswordRecoveryModal
+    setShowPasswordRecoveryModal(!showPasswordRecoveryModal);
   };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" onClick={handleOutsideClick}>
       <div className="bg-white rounded-lg p-8" ref={modalRef}>
-        {showLoginModal ? (
+        {showContent && (
+          <div className="text-center mb-4">
+            <div className="flex justify-center items-center mt-4">
+              <div
+                className={`cursor-pointer px-4 py-2 rounded-t-lg transition duration-300 ease-in-out ${loginType === 'user' ? 'border-b-2 border-blue-800' : 'border-b border-transparent'
+                  }`}
+                onClick={() => handleLoginTypeChange('user')}
+              >
+                Usuario
+              </div>
+              <div
+                className={`cursor-pointer px-4 py-2 rounded-t-lg transition duration-300 ease-in-out ${loginType === 'admin' ? 'border-b-2 border-blue-800' : 'border-b border-transparent'
+                  }`}
+                onClick={() => handleLoginTypeChange('admin')}
+              >
+                Administrador
+              </div>
+            </div>
+          </div>
+        )}
+
+        {showContent && (
           <>
-            <h2 className="text-2xl font-semibold text-center mb-4">Iniciar Sesión</h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="mb-4">
-                <label htmlFor="email" className="block text-gray-800 font-medium">Email:</label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label htmlFor="password" className="block text-gray-800 font-medium">Contraseña:</label>
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <p className="text-gray-600 text-sm text-center mb-4">¿No tienes una cuenta? <span className="text-blue-500 cursor-pointer" onClick={toggleRegisterModal}>Regístrate</span></p>
-              <p className="text-gray-600 text-sm text-center mb-4">Olvidó su contraseña? <span className="text-blue-500 cursor-pointer" onClick={togglePasswordRecoveryModal}>recupérela aquí</span></p>
-              <div className="text-center">
-                <button
-                  type="submit"
-                  className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-full focus:outline-none focus:ring focus:border-blue-700"
-                >
-                  Iniciar Sesión
-                </button>
-              </div>
-            </form>
+            {loginType === 'user' ? (
+              <>
+                <h2 className="text-2xl font-semibold text-center mb-4">Inicio Sesión Usuario</h2>
+                <form onSubmit={handleSubmitUser} className="space-y-4">
+                  <div className="mb-4">
+                    <label htmlFor="cedula" className="block text-gray-800 font-medium">Cédula:</label>
+                    <input
+                      type="text"
+                      id="cedula"
+                      name="cedula"
+                      className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500"
+                      value={formDataUser.cedula}
+                      onChange={handleInputChangeUser}
+                      required
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label htmlFor="password" className="block text-gray-800 font-medium">Contraseña:</label>
+                    <input
+                      type="password"
+                      id="password"
+                      name="password"
+                      className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500"
+                      value={formDataUser.password}
+                      onChange={handleInputChangeUser}
+                      required
+                    />
+                  </div>
+                  <p className="text-gray-600 text-sm text-center mb-4">
+                    ¿No tienes una cuenta? <span className="text-blue-500 cursor-pointer" onClick={toggleRegisterModal}>Regístrate</span>
+                  </p>
+                  <p className="text-gray-600 text-sm text-center mb-4">
+                    ¿Olvidó su contraseña? <span className="text-blue-500 cursor-pointer" onClick={togglePasswordRecoveryModal}>Recupérela aquí</span>
+                  </p>
+                  <div className="text-center">
+                    <button
+                      type="submit"
+                      className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-full focus:outline-none focus:ring focus:border-blue-700"
+                      onClick={handleSubmitUser} // Agrega esta línea
+                    >
+                      Iniciar Sesión
+                    </button>
+                  </div>
+                </form>
+              </>
+            ) : (
+              <>
+                <h2 className="text-2xl font-semibold text-center mb-4">Inicio Sesión Administrador</h2>
+                <form onSubmit={handleSubmitAdmin} className="space-y-4">
+                  <div className="mb-4">
+                    <label htmlFor="email" className="block text-gray-800 font-medium">Email:</label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500"
+                      value={formDataAdmin.email}
+                      onChange={handleInputChangeAdmin}
+                      required
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label htmlFor="password_admin" className="block text-gray-800 font-medium">Contraseña:</label>
+                    <input
+                      type="password"
+                      id="password_admin"
+                      name="password_admin"
+                      className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500"
+                      value={formDataAdmin.password_admin}
+                      onChange={handleInputChangeAdmin}
+                      required
+                    />
+                  </div>
+                  <div className="text-center">
+                  <button
+  type="submit"
+  className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-full focus:outline-none focus:ring focus:border-blue-700"
+  onClick={handleSubmitAdmin} 
+>
+  Iniciar Sesión
+</button>
+
+                  </div>
+                </form>
+              </>
+            )}
           </>
-        ) : null}
+        )}
 
         {showRegisterModal ? (
-          <RegisterModal closeModal={closeModal} /> 
+          <RegisterModal closeModal={toggleRegisterModal} />
         ) : null}
 
         {showPasswordRecoveryModal ? (
-          <PasswordRecoveryModal closeModal={togglePasswordRecoveryModal} />
+          <PasswordRecoveryModal closeModal={() => {
+            setShowContent(true);
+            setShowPasswordRecoveryModal(false);
+            closeModal();
+          }} />
         ) : null}
       </div>
     </div>
