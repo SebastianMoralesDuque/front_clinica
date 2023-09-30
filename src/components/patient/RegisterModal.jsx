@@ -5,7 +5,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 import getToken from '../../services/tokenService';
 import obtenerEstados from '../../services/estadoService';
 import obtenerCiudades from '../../services/ciudadService'
-import obtenerEps from '../../services/epsService'; // Importa la función aquí;
+import obtenerEps from '../../services/epsService';
+import swal from 'sweetalert';
 
 const RegisterModal = ({ closeModal }) => {
   const modalRef = useRef(null);
@@ -67,14 +68,14 @@ const RegisterModal = ({ closeModal }) => {
     // Encriptar la contraseña antes de enviarla al backend
     const hashedPassword = await bcrypt.hash(formData.contrasena, 10);
     formData.contrasena = hashedPassword;
-    };
+  };
 
   const handleSubmit = async (e) => {
     handlePasswordHashing(e);
     e.preventDefault();
     console.log('Formulario de registro enviado con datos:', formData);
     closeModal();
-  
+
     try {
       // Cargar la foto en Cloudinary
       let imageUrl = null;
@@ -86,12 +87,12 @@ const RegisterModal = ({ closeModal }) => {
         cloudinaryData.append("cloud_name", "dkm9g0zpt"); // Reemplaza con tu cloud_name
         cloudinaryData.append("api_key", "654495213436479"); // Reemplaza con tu api_key
         cloudinaryData.append("api_secret", "PIJO3ukm6rEsZFGjOIK7gcVDV-g"); // Reemplaza con tu api_secret
-  
+
         const cloudinaryResponse = await fetch("https://api.cloudinary.com/v1_1/tu_cloud_name/image/upload", {
           method: "post",
           body: cloudinaryData,
         });
-  
+
         if (cloudinaryResponse.ok) {
           const cloudinaryData = await cloudinaryResponse.json();
           imageUrl = cloudinaryData.url;
@@ -100,7 +101,7 @@ const RegisterModal = ({ closeModal }) => {
           console.error('Error al cargar la foto en Cloudinary');
         }
       }
-  
+
       // Datos para la primera petición
       const data1 = {
         cedula: formData.cedula,
@@ -111,7 +112,7 @@ const RegisterModal = ({ closeModal }) => {
         ciudad: formData.ciudad,
         url_foto: imageUrl, // Agregar la URL de la foto de perfil
       };
-      
+
       // Realizar la primera petición a http://localhost:9009/usuarios/gestion
       const response1 = await fetch('http://localhost:9009/usuarios/gestion', {
         method: 'POST',
@@ -120,7 +121,7 @@ const RegisterModal = ({ closeModal }) => {
         },
         body: JSON.stringify(data1),
       });
-  
+
       if (response1.ok) {
         console.log('Primera petición exitosa');
 
@@ -147,11 +148,33 @@ const RegisterModal = ({ closeModal }) => {
 
         if (response2.ok) {
           console.log('Segunda petición exitosa');
+          swal({
+            title: "Registro de Pacientes",
+            text: "Registro Exitoso. Bienvenido(a)",
+            icon: "success",
+            timer: "2000",
+            buttons: false
+          });
         } else {
           console.error('Error en la segunda petición');
+          swal({
+            title: "Registro de Pacientes",
+            text: "Registro Fallido. Verifique los datos ingresados",
+            icon: "error",
+            timer: "2000",
+            buttons: false
+          });
         }
       } else {
         console.error('Error en la primera petición');
+        console.error('Error en la segunda petición');
+          swal({
+            title: "Registro de Pacientes",
+            text: "Registro Fallido. Verifique los datos ingresados",
+            icon: "error",
+            timer: "2000",
+            buttons: false
+          });
       }
     } catch (error) {
       console.error('Error al realizar las peticiones:', error);
@@ -244,6 +267,7 @@ const RegisterModal = ({ closeModal }) => {
                 value={formData.cedula}
                 onChange={handleInputChange}
                 required
+                maxLength={10}
                 className="w-full border rounded px-3 py-2"
               />
             </div>
@@ -259,6 +283,7 @@ const RegisterModal = ({ closeModal }) => {
                 value={formData.telefono}
                 onChange={handleInputChange}
                 required
+                maxLength={10}
                 className="w-full border rounded px-3 py-2"
               />
             </div>

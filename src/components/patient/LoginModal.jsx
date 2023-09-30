@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import RegisterModal from './RegisterModal';
 import PasswordRecoveryModal from './PasswordRecoveryModal';
+import swal from 'sweetalert';
 
 const LoginModal = ({ closeModal }) => {
   const modalRef = useRef(null);
@@ -52,20 +53,68 @@ const LoginModal = ({ closeModal }) => {
     });
   };
 
-  const handleSubmitUser = (e) => {
+  const handleSubmitUser = async (e) => {
     e.preventDefault();
-    const endpoint = '/api/login/user';
-    console.log('Enviando datos a:', endpoint);
-    console.log('Datos del usuario:', formDataUser);
+    // Realiza la petición de login a http://localhost:9009/usuarios/gestion/login/medpac
+    console.log('Formulario enviado con datos:', formDataUser);
+    const response = await fetch('http://localhost:9009/usuarios/gestion/login/medpac', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formDataUser),
+    });
+
+    if (response.ok) {
+      swal({
+        title: "Inicio de sesión",
+        text: "Credenciales Correctas. Bienvenido(a)",
+        icon: "success",
+        timer: "2000",
+        buttons: false
+      });
+    } else {
+      swal({
+        title: "Inicio de sesión",
+        text: "Credenciales Incorrectas. Acceso no autorizado",
+        icon: "error",
+        timer: "2000",
+        buttons: false
+      });
+    }
     closeModal();
   };
 
-  const handleSubmitAdmin = (e) => {
+  const handleSubmitAdmin = async(e) => {
     e.preventDefault();
-    const endpoint = '/api/login/admin';
-    console.log('Enviando datos a:', endpoint);
-    console.log('Datos del administrador:', formDataAdmin);
-    closeModal();
+   // Realiza la petición de login a http://localhost:9009/usuarios/gestion/login/admin
+   console.log('Formulario enviado con datos:', formDataAdmin);
+   const response = await fetch('http://localhost:9009/usuarios/gestion/login/admin', {
+     method: 'POST',
+     headers: {
+       'Content-Type': 'application/json',
+     },
+     body: JSON.stringify(formDataAdmin),
+   });
+
+   if (response.ok) {
+     swal({
+       title: "Inicio de sesión",
+       text: "Credenciales Correctas. Bienvenido(a)",
+       icon: "success",
+       timer: "2000",
+       buttons: false
+     });
+   } else {
+     swal({
+       title: "Inicio de sesión",
+       text: "Credenciales Incorrectas. Acceso no autorizado",
+       icon: "error",
+       timer: "2000",
+       buttons: false
+     });
+   }
+   closeModal();
   };
 
   const toggleRegisterModal = () => {
@@ -177,13 +226,13 @@ const LoginModal = ({ closeModal }) => {
                     />
                   </div>
                   <div className="text-center">
-                  <button
-  type="submit"
-  className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-full focus:outline-none focus:ring focus:border-blue-700"
-  onClick={handleSubmitAdmin} 
->
-  Iniciar Sesión
-</button>
+                    <button
+                      type="submit"
+                      className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-full focus:outline-none focus:ring focus:border-blue-700"
+                      onClick={handleSubmitAdmin}
+                    >
+                      Iniciar Sesión
+                    </button>
 
                   </div>
                 </form>
