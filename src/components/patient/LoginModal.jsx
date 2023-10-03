@@ -10,17 +10,24 @@ const LoginModal = ({ closeModal }) => {
   const modalRef = useRef(null);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [showPasswordRecoveryModal, setShowPasswordRecoveryModal] = useState(false);
+
   const [formDataUser, setFormDataUser] = useState({
     cedula: '',
     password: '',
   });
+
   const [formDataAdmin, setFormDataAdmin] = useState({
     email: '',
     password_admin: '',
   });
 
+  const [formDataDoctor, setFormDataDoctor] = useState({
+    codigoMedico: '', // Corregido el nombre del campo
+    passwordMedico: '', // Corregido el nombre del campo
+  });
+
   const [loginType, setLoginType] = useState('user');
-  const [showContent, setShowContent] = useState(true); // Nuevo estado
+  const [showContent, setShowContent] = useState(true);
 
   const handleOutsideClick = (e) => {
     if (modalRef.current && !modalRef.current.contains(e.target)) {
@@ -38,6 +45,10 @@ const LoginModal = ({ closeModal }) => {
       email: '',
       password_admin: '',
     });
+    setFormDataDoctor({
+      codigoMedico: '', // Corregido el nombre del campo
+      passwordMedico: '', // Corregido el nombre del campo
+    });
   };
 
   const handleInputChangeUser = (e) => {
@@ -52,6 +63,14 @@ const LoginModal = ({ closeModal }) => {
     const { name, value } = e.target;
     setFormDataAdmin({
       ...formDataAdmin,
+      [name]: value,
+    });
+  };
+
+  const handleInputChangeDoctor = (e) => {
+    const { name, value } = e.target;
+    setFormDataDoctor({
+      ...formDataDoctor,
       [name]: value,
     });
   };
@@ -73,7 +92,37 @@ const LoginModal = ({ closeModal }) => {
 
       // Realizamos la redirección a la página de inicio de usuario
       navigate("/HomePatient"); // Puedes ajustar la ruta según tu estructura de rutas
-    }else {
+    } else {
+      swal({
+        title: "Inicio de sesión",
+        text: "Credenciales Incorrectas. Acceso no autorizado",
+        icon: "error",
+        timer: "2000",
+        buttons: false
+      });
+    }
+
+    closeModal();
+  };
+
+  const handleSubmitDoctor = async (e) => {
+    e.preventDefault();
+    console.log('Formulario enviado con datos de médico:', formDataDoctor);
+
+    const loginSuccess = await UserService.loginDoctor(formDataDoctor);
+
+    if (loginSuccess) {
+      swal({
+        title: "Inicio de sesión",
+        text: "Credenciales Correctas. Bienvenido(a)",
+        icon: "success",
+        timer: "2000",
+        buttons: false
+      });
+
+      // Realizamos la redirección a la página de inicio de usuario
+      navigate("/inicioMedico"); // Puedes ajustar la ruta según tu estructura de rutas
+    } else {
       swal({
         title: "Inicio de sesión",
         text: "Credenciales Incorrectas. Acceso no autorizado",
@@ -88,7 +137,7 @@ const LoginModal = ({ closeModal }) => {
 
   const handleSubmitAdmin = async (e) => {
     e.preventDefault();
-    console.log('Formulario enviado con datos:', formDataAdmin);
+    console.log('Formulario enviado con datos de admin:', formDataAdmin);
 
     const loginSuccess = await UserService.loginAdmin(formDataAdmin);
 
@@ -100,6 +149,9 @@ const LoginModal = ({ closeModal }) => {
         timer: "2000",
         buttons: false
       });
+
+      // Realizamos la redirección a la página de inicio de usuario
+      navigate("/homeAdmin"); // Puedes ajustar la ruta según tu estructura de rutas
     } else {
       swal({
         title: "Inicio de sesión",
@@ -118,7 +170,7 @@ const LoginModal = ({ closeModal }) => {
   };
 
   const togglePasswordRecoveryModal = () => {
-    setShowContent(!showContent); // Ocultar todo lo anterior al mostrar PasswordRecoveryModal
+    setShowContent(!showContent);
     setShowPasswordRecoveryModal(!showPasswordRecoveryModal);
   };
 
@@ -134,6 +186,13 @@ const LoginModal = ({ closeModal }) => {
                 onClick={() => handleLoginTypeChange('user')}
               >
                 Usuario
+              </div>
+              <div
+                className={`cursor-pointer px-4 py-2 rounded-t-lg transition duration-300 ease-in-out ${loginType === 'medico' ? 'border-b-2 border-blue-800' : 'border-b border-transparent'
+                  }`}
+                onClick={() => handleLoginTypeChange('medico')}
+              >
+                Médico
               </div>
               <div
                 className={`cursor-pointer px-4 py-2 rounded-t-lg transition duration-300 ease-in-out ${loginType === 'admin' ? 'border-b-2 border-blue-800' : 'border-b border-transparent'
@@ -186,7 +245,46 @@ const LoginModal = ({ closeModal }) => {
                     <button
                       type="submit"
                       className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-full focus:outline-none focus:ring focus:border-blue-700"
-                      onClick={handleSubmitUser} // Agrega esta línea
+                      onClick={handleSubmitUser}
+                    >
+                      Iniciar Sesión
+                    </button>
+                  </div>
+                </form>
+              </>
+            ) : loginType === 'medico' ? (
+              <>
+                <h2 className="text-2xl font-semibold text-center mb-4">Inicio Sesión Médico</h2>
+                <form onSubmit={handleSubmitDoctor} className="space-y-4">
+                  <div className="mb-4">
+                    <label htmlFor="codigoMedico" className="block text-gray-800 font-medium">Cédula:</label>
+                    <input
+                      type="text"
+                      id="codigoMedico"
+                      name="codigoMedico"
+                      className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500"
+                      value={formDataDoctor.codigoMedico}
+                      onChange={handleInputChangeDoctor}
+                      required
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label htmlFor="passwordMedico" className="block text-gray-800 font-medium">Contraseña:</label>
+                    <input
+                      type="password"
+                      id="passwordMedico"
+                      name="passwordMedico"
+                      className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500"
+                      value={formDataDoctor.passwordMedico}
+                      onChange={handleInputChangeDoctor}
+                      required
+                    />
+                  </div>
+                  <div className="text-center">
+                    <button
+                      type="submit"
+                      className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-full focus:outline-none focus:ring focus:border-blue-700"
+                      onClick={handleSubmitDoctor}
                     >
                       Iniciar Sesión
                     </button>
@@ -229,7 +327,6 @@ const LoginModal = ({ closeModal }) => {
                     >
                       Iniciar Sesión
                     </button>
-
                   </div>
                 </form>
               </>

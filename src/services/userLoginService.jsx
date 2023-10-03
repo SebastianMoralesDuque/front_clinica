@@ -1,4 +1,5 @@
 const loginUser = async (formData) => {
+  try {
     const response = await fetch('http://localhost:9009/usuarios/gestion/login/medpac', {
       method: 'POST',
       headers: {
@@ -6,11 +7,26 @@ const loginUser = async (formData) => {
       },
       body: JSON.stringify(formData),
     });
-  
-    return response.ok;
-  };
-  
-  const loginAdmin = async (formData) => {
+
+    if (response.ok) {
+      const userData = await response.json();
+
+      // Almacenar datos en el localStorage para el tipo "paciente"
+      localStorage.setItem('userType', 'paciente');
+      localStorage.setItem('userData', JSON.stringify(userData));
+
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error('Error al iniciar sesión:', error);
+    return false;
+  }
+};
+
+const loginAdmin = async (formData) => {
+  try {
     const response = await fetch('http://localhost:9009/usuarios/gestion/login/admin', {
       method: 'POST',
       headers: {
@@ -18,14 +34,55 @@ const loginUser = async (formData) => {
       },
       body: JSON.stringify(formData),
     });
-  
-    return response.ok;
-  };
-  
-  const UserService = {
-    loginUser,
-    loginAdmin,
-  };
-  
-  export default UserService;
-  
+
+    if (response.ok) {
+      const adminData = await response.json();
+
+      // Almacenar datos en el localStorage para el tipo "admin"
+      localStorage.setItem('adminType', 'admin');
+      localStorage.setItem('adminData', JSON.stringify(adminData));
+
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error('Error al iniciar sesión como administrador:', error);
+    return false;
+  }
+};
+
+const loginDoctor = async (formData) => {
+  try {
+    const response = await fetch('http://localhost:9009/usuarios/gestion/login/medico', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (response.ok) {
+      const medicoData = await response.json();
+
+      // Almacenar datos en el localStorage para el tipo "médico"
+      localStorage.setItem('medicoType', 'medico');
+      localStorage.setItem('medicoData', JSON.stringify(medicoData));
+
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error('Error al iniciar sesión como médico:', error);
+    return false;
+  }
+};
+
+const UserService = {
+  loginUser,
+  loginAdmin,
+  loginDoctor,
+};
+
+export default UserService;
