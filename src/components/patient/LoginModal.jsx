@@ -1,9 +1,12 @@
 import React, { useRef, useState } from 'react';
 import RegisterModal from './RegisterModal';
 import PasswordRecoveryModal from './PasswordRecoveryModal';
+import UserService from '../../services/userLoginService'
+import { useNavigate } from 'react-router-dom';
 import swal from 'sweetalert';
 
 const LoginModal = ({ closeModal }) => {
+  const navigate = useNavigate();
   const modalRef = useRef(null);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [showPasswordRecoveryModal, setShowPasswordRecoveryModal] = useState(false);
@@ -55,17 +58,41 @@ const LoginModal = ({ closeModal }) => {
 
   const handleSubmitUser = async (e) => {
     e.preventDefault();
-    // Realiza la petición de login a http://localhost:9009/usuarios/gestion/login/medpac
     console.log('Formulario enviado con datos:', formDataUser);
-    const response = await fetch('http://localhost:9009/usuarios/gestion/login/medpac', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formDataUser),
-    });
 
-    if (response.ok) {
+    const loginSuccess = await UserService.loginUser(formDataUser);
+
+    if (loginSuccess) {
+      swal({
+        title: "Inicio de sesión",
+        text: "Credenciales Correctas. Bienvenido(a)",
+        icon: "success",
+        timer: "2000",
+        buttons: false
+      });
+
+      // Realizamos la redirección a la página de inicio de usuario
+      navigate("/HomePatient"); // Puedes ajustar la ruta según tu estructura de rutas
+    }else {
+      swal({
+        title: "Inicio de sesión",
+        text: "Credenciales Incorrectas. Acceso no autorizado",
+        icon: "error",
+        timer: "2000",
+        buttons: false
+      });
+    }
+
+    closeModal();
+  };
+
+  const handleSubmitAdmin = async (e) => {
+    e.preventDefault();
+    console.log('Formulario enviado con datos:', formDataAdmin);
+
+    const loginSuccess = await UserService.loginAdmin(formDataAdmin);
+
+    if (loginSuccess) {
       swal({
         title: "Inicio de sesión",
         text: "Credenciales Correctas. Bienvenido(a)",
@@ -82,39 +109,8 @@ const LoginModal = ({ closeModal }) => {
         buttons: false
       });
     }
+
     closeModal();
-  };
-
-  const handleSubmitAdmin = async(e) => {
-    e.preventDefault();
-   // Realiza la petición de login a http://localhost:9009/usuarios/gestion/login/admin
-   console.log('Formulario enviado con datos:', formDataAdmin);
-   const response = await fetch('http://localhost:9009/usuarios/gestion/login/admin', {
-     method: 'POST',
-     headers: {
-       'Content-Type': 'application/json',
-     },
-     body: JSON.stringify(formDataAdmin),
-   });
-
-   if (response.ok) {
-     swal({
-       title: "Inicio de sesión",
-       text: "Credenciales Correctas. Bienvenido(a)",
-       icon: "success",
-       timer: "2000",
-       buttons: false
-     });
-   } else {
-     swal({
-       title: "Inicio de sesión",
-       text: "Credenciales Incorrectas. Acceso no autorizado",
-       icon: "error",
-       timer: "2000",
-       buttons: false
-     });
-   }
-   closeModal();
   };
 
   const toggleRegisterModal = () => {

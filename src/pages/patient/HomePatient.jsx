@@ -5,7 +5,7 @@ import AgendarCitaModal from '../../components/patient/AgendarCitaModal';
 import PqrModal from '../../components/patient/PqrModal'; // Importa el nuevo componente
 import 'react-datepicker/dist/react-datepicker.css';
 
-function Home() {
+function HomePatient() {
   const nombrePaciente = "Sebastian Morales";
   const elementosPorPagina = 3;
   const [paginaPendientes, setPaginaPendientes] = useState(0);
@@ -209,4 +209,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default HomePatient;

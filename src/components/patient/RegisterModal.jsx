@@ -6,6 +6,7 @@ import getToken from '../../services/tokenService';
 import obtenerEstados from '../../services/estadoService';
 import obtenerCiudades from '../../services/ciudadService'
 import obtenerEps from '../../services/epsService';
+import userRegisterService from '../../services/userRegisterService';
 import swal from 'sweetalert';
 
 const RegisterModal = ({ closeModal }) => {
@@ -75,33 +76,15 @@ const RegisterModal = ({ closeModal }) => {
     e.preventDefault();
     console.log('Formulario de registro enviado con datos:', formData);
     closeModal();
-
+  
     try {
       // Cargar la foto en Cloudinary
       let imageUrl = null;
       if (formData.fotoPerfil) {
-        const cloudinaryData = new FormData();
-        cloudinaryData.append("file", formData.fotoPerfil);
-        cloudinaryData.append("public_id", formData.cedula);
-        cloudinaryData.append("upload_preset", "ml_default");
-        cloudinaryData.append("cloud_name", "dkm9g0zpt"); // Reemplaza con tu cloud_name
-        cloudinaryData.append("api_key", "654495213436479"); // Reemplaza con tu api_key
-        cloudinaryData.append("api_secret", "PIJO3ukm6rEsZFGjOIK7gcVDV-g"); // Reemplaza con tu api_secret
-
-        const cloudinaryResponse = await fetch("https://api.cloudinary.com/v1_1/tu_cloud_name/image/upload", {
-          method: "post",
-          body: cloudinaryData,
-        });
-
-        if (cloudinaryResponse.ok) {
-          const cloudinaryData = await cloudinaryResponse.json();
-          imageUrl = cloudinaryData.url;
-          console.log('Foto cargada en Cloudinary con éxito:', imageUrl);
-        } else {
-          console.error('Error al cargar la foto en Cloudinary');
-        }
+        imageUrl = await userRegisterService.uploadPhotoToCloudinary(formData.fotoPerfil, formData.cedula);
+        console.log('Foto cargada en Cloudinary con éxito:', imageUrl);
       }
-
+  
       // Datos para la primera petición
       const data1 = {
         cedula: formData.cedula,
@@ -112,76 +95,39 @@ const RegisterModal = ({ closeModal }) => {
         ciudad: formData.ciudad,
         url_foto: imageUrl, // Agregar la URL de la foto de perfil
       };
-
-      // Realizar la primera petición a http://localhost:9009/usuarios/gestion
-      const response1 = await fetch('http://localhost:9009/usuarios/gestion', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data1),
+  
+      // Datos para la segunda petición
+      const data2 = {
+        cedula_usuario: formData.cedula,
+        fecha_nacimiento: formData.fechaNacimiento,
+        alergias: formData.alergias,
+        eps: formData.eps,
+        tipo_sangre: formData.tipoSangre,
+      };
+  
+      // Realizar las peticiones a través del servicio
+      const response = await userRegisterService.registerUser(data1, data2);
+  
+      console.log('Respuesta del registro:', response);
+  
+      swal({
+        title: 'Registro de Pacientes',
+        text: 'Registro Exitoso. Bienvenido(a)',
+        icon: 'success',
+        timer: '2000',
+        buttons: false,
       });
-
-      if (response1.ok) {
-        console.log('Primera petición exitosa');
-
-        // Obtener la respuesta JSON que debe contener la ID del usuario creado
-        const usuarioCreado = await response1.json();
-
-        // Datos para la segunda petición
-        const data2 = {
-          cedula_usuario: formData.cedula,
-          fecha_nacimiento: formData.fechaNacimiento,
-          alergias: formData.alergias,
-          eps: formData.eps,
-          tipo_sangre: formData.tipoSangre
-        };
-
-        // Realizar la segunda petición a http://localhost:9009/usuarios/gestion/pacientes
-        const response2 = await fetch('http://localhost:9009/usuarios/gestion/pacientes', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data2),
-        });
-
-        if (response2.ok) {
-          console.log('Segunda petición exitosa');
-          swal({
-            title: "Registro de Pacientes",
-            text: "Registro Exitoso. Bienvenido(a)",
-            icon: "success",
-            timer: "2000",
-            buttons: false
-          });
-        } else {
-          console.error('Error en la segunda petición');
-          swal({
-            title: "Registro de Pacientes",
-            text: "Registro Fallido. Verifique los datos ingresados",
-            icon: "error",
-            timer: "2000",
-            buttons: false
-          });
-        }
-      } else {
-        console.error('Error en la primera petición');
-        console.error('Error en la segunda petición');
-          swal({
-            title: "Registro de Pacientes",
-            text: "Registro Fallido. Verifique los datos ingresados",
-            icon: "error",
-            timer: "2000",
-            buttons: false
-          });
-      }
     } catch (error) {
-      console.error('Error al realizar las peticiones:', error);
+      console.error('Error al realizar el registro:', error);
+      swal({
+        title: 'Registro de Pacientes',
+        text: 'Registro Fallido. Verifique los datos ingresados',
+        icon: 'error',
+        timer: '2000',
+        buttons: false,
+      });
     }
   };
-
-
 
   useEffect(() => {
     const obtenerToken = async () => {

@@ -1,18 +1,19 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './pages/patient/Home';
+import Home from './pages/Home';
+import HomePatient from './pages/patient/HomePatient';
 import HistorialMedico from './pages/patient/HistorialMedico';
 import Pqrs from './pages/patient/Pqrs';
-import Navbar from './components/patient/Navbar';
+import PatientNavbar from './components/patient/PatientNavbar';
 import DoctorNavbar from './components/doctor/DoctorNavbar';
-import HomeAdmin from './pages/admin/HomeAdmin'; // Asegúrate de que la ruta sea correcta según tu estructura de carpetas
-import CreateMedico from './pages/admin/CreateMedico'; // Asegúrate de que la ruta sea correcta según tu estructura de carpetas
-import PqrsAdmin from './pages/admin/PqrsAdmin'; // Asegúrate de que la ruta sea correcta según tu estructura de carpetas
-import HistorialConsultasMed from './pages/admin/HistorialConsultasMed'; // Asegúrate de que la ruta sea correcta según tu estructura de carpetas
+import Navbar from './components/Nabvar';
+import HomeAdmin from './pages/admin/HomeAdmin';
+import CreateMedico from './pages/admin/CreateMedico';
+import PqrsAdmin from './pages/admin/PqrsAdmin';
+import HistorialConsultasMed from './pages/admin/HistorialConsultasMed';
 import CrudMed from './pages/admin/CrudMed';
-import Ejemplo from './Ejemplo';
 import InformacionPaciente from './pages/patient/InformacionPaciente';
-import HomeMedico from './pages/doctor/Home'
+import HomeDoctor from './pages/doctor/HomeDoctor';
 import AtenderCita from './pages/doctor/AtenderCita';
 import NotFoundPage from './pages/NotFoundPage';
 import MaintenancePage from './pages/MaintenancePage';
@@ -23,12 +24,13 @@ const AppRoutes = () => {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
+
+        <Route path="/HomePatient" element={<HomePatient />} />
         <Route path="/historialMedico" element={<HistorialMedico />} />
         <Route path="/pqrs" element={<Pqrs />} />
         <Route path="/informacionPaciente" element={<InformacionPaciente />} />
 
-
-        <Route path="/inicioMedico" element={<HomeMedico/>}/>
+        <Route path="/inicioMedico" element={<HomeDoctor />} />
         <Route path="/atenderCita" element={<AtenderCita />} />
 
         <Route path="/homeAdmin" element={<HomeAdmin />} />
@@ -36,13 +38,12 @@ const AppRoutes = () => {
         <Route path="/pqrsadmin" element={<PqrsAdmin />} />
         <Route path="/historialconsultasmed" element={<HistorialConsultasMed />} />
         <Route path="/crudmed" element={<CrudMed />} />
-   
+
         <Route path="/maintenancePage" element={<MaintenancePage />} />
         <Route path="/notFoundPage" element={<NotFoundPage />} />
-
       </Routes>
     </Router>
   );
-} 
+};
 
 export default AppRoutes;

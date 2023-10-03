@@ -4,7 +4,7 @@ import DocHistorialCitas from '../../components/doctor/DocHistorialCitas';
 import DoctorDayOffModal from '../../components/doctor/DoctorDayOffModal';
 import CitasPendientesModal from '../../components/doctor/CitasPendientesModal';
 
-function Home() {
+function HomeDoctor() {
   const [isModalOpen, setIsModalOpen] = useState(false); // Estado para controlar la apertura/cierre del modal
   const [isCitasPendientesModalOpen, setIsCitasPendientesModalOpen] = useState(false);
 
@@ -65,4 +65,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default HomeDoctor;
