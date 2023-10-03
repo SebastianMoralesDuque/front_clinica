@@ -7,7 +7,6 @@ const loginUser = async (formData) => {
       },
       body: JSON.stringify(formData),
     });
-
     if (response.ok) {
       const userData = await response.json();
 
@@ -36,11 +35,11 @@ const loginAdmin = async (formData) => {
     });
 
     if (response.ok) {
-      const adminData = await response.json();
+      const userData = await response.json();
 
-      // Almacenar datos en el localStorage para el tipo "admin"
-      localStorage.setItem('adminType', 'admin');
-      localStorage.setItem('adminData', JSON.stringify(adminData));
+      // Almacenar datos en el localStorage para el tipo "paciente"
+      localStorage.setItem('userType', 'admin');
+      localStorage.setItem('userData', JSON.stringify(userData));
 
       return true;
     } else {

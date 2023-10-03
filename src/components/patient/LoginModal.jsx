@@ -78,9 +78,9 @@ const LoginModal = ({ closeModal }) => {
   const handleSubmitUser = async (e) => {
     e.preventDefault();
     console.log('Formulario enviado con datos:', formDataUser);
-
+  
     const loginSuccess = await UserService.loginUser(formDataUser);
-
+  
     if (loginSuccess) {
       swal({
         title: "Inicio de sesión",
@@ -89,9 +89,11 @@ const LoginModal = ({ closeModal }) => {
         timer: "2000",
         buttons: false
       });
-
-      // Realizamos la redirección a la página de inicio de usuario
-      navigate("/HomePatient"); // Puedes ajustar la ruta según tu estructura de rutas
+  
+      // Recargar la página después de 2 segundos
+      setTimeout(() => {
+        window.location.reload();
+      }, 1600);
     } else {
       swal({
         title: "Inicio de sesión",
@@ -101,9 +103,10 @@ const LoginModal = ({ closeModal }) => {
         buttons: false
       });
     }
-
+  
     closeModal();
   };
+  
 
   const handleSubmitDoctor = async (e) => {
     e.preventDefault();
@@ -120,8 +123,9 @@ const LoginModal = ({ closeModal }) => {
         buttons: false
       });
 
-      // Realizamos la redirección a la página de inicio de usuario
-      navigate("/inicioMedico"); // Puedes ajustar la ruta según tu estructura de rutas
+      setTimeout(() => {
+        window.location.reload();
+      }, 1600);
     } else {
       swal({
         title: "Inicio de sesión",
@@ -149,9 +153,9 @@ const LoginModal = ({ closeModal }) => {
         timer: "2000",
         buttons: false
       });
-
-      // Realizamos la redirección a la página de inicio de usuario
-      navigate("/homeAdmin"); // Puedes ajustar la ruta según tu estructura de rutas
+      setTimeout(() => {
+        window.location.reload();
+      }, 1600);
     } else {
       swal({
         title: "Inicio de sesión",

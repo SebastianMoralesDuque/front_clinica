@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/Home';
 import HomePatient from './pages/patient/HomePatient';
@@ -22,6 +22,10 @@ import MaintenancePage from './pages/MaintenancePage';
 const AppRoutes = () => {
   // Obtener el tipo de usuario almacenado en localStorage
   const userType = localStorage.getItem('userType');
+  console.log(userType);
+
+  // Estado para forzar la actualización de las rutas al cambiar el tipo de usuario
+  const [userTypeState, setUserTypeState] = useState(userType);
 
   // Función para redirigir a la página de mantenimiento si es necesario
   const redirectToMaintenance = () => <Navigate to="/maintenancePage" />;
@@ -31,51 +35,55 @@ const AppRoutes = () => {
     // Aquí puedes colocar tu lógica de inicio de sesión, si es así
   }, []);
 
+  // Función para recargar la página y borrar el contenido del localStorage
+  const reloadAndClearLocalStorage = () => {
+    localStorage.clear();
+    setUserTypeState(null); // Cambia el estado para forzar la actualización de las rutas
+  };
+
   return (
     <Router>
       {/* Renderizar el Navbar según el tipo de usuario o Navbar por defecto */}
-      {userType === 'paciente' && <PatientNavbar />}
-      {userType === 'medico' && <DoctorNavbar />}
-      {userType === 'admin' && <AdminNavbar />}
-      {!userType && <Navbar />}
+      {userTypeState === 'paciente' && <PatientNavbar />}
+      {userTypeState === 'medico' && <DoctorNavbar />}
+      {userTypeState === 'admin' && <AdminNavbar />}
+      {!userTypeState && <Navbar />}
 
-      <Routes>
-        <Route path="/" element={<Home />} />
+      {/* Lógica condicional para renderizar el componente Home correspondiente */}
+      {userTypeState === 'paciente' ? (
+        <Routes>
+          <Route path="/" element={<HomePatient />} />
+          <Route path="/historialMedico" element={<HistorialMedico />} />
+          <Route path="/pqrs" element={<Pqrs />} />
+          <Route path="/informacionPaciente" element={<InformacionPaciente />} />
+        </Routes>
+      ) : userTypeState === 'medico' ? (
+        <Routes>
+          <Route path="/homeDoctor" element={<HomeDoctor />} />
+          <Route path="/atenderCita" element={<AtenderCita />} />
+        </Routes>
+      ) : userTypeState === 'admin' ? (
+        <Routes>
+          <Route path="/homeAdmin" element={<HomeAdmin />} />
+          <Route path="/createmedico" element={<CreateMedico />} />
+          <Route path="/pqrsadmin" element={<PqrsAdmin />} />
+          <Route path="/historialconsultasmed" element={<HistorialConsultasMed />} />
+          <Route path="/crudmed" element={<CrudMed />} />
+        </Routes>
+      ) : (
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/maintenancePage" element={<MaintenancePage />} />
+          <Route path="/notFoundPage" element={<NotFoundPage />} />
+          <Route path="/maintenance" element={redirectToMaintenance} />
+          
+          {/* Redirección a NotFoundPage en caso de no encontrar la página */}
+          <Route path="*" element={<Navigate to="/notFoundPage" />} />
+        </Routes>
+      )}
 
-        {/* Rutas para paciente */}
-        {userType === 'paciente' && (
-          <>
-            <Route path="/HomePatient" element={<HomePatient />} />
-            <Route path="/historialMedico" element={<HistorialMedico />} />
-            <Route path="/pqrs" element={<Pqrs />} />
-            <Route path="/informacionPaciente" element={<InformacionPaciente />} />
-          </>
-        )}
-
-        {/* Rutas para médico */}
-        {userType === 'medico' && (
-          <>
-            <Route path="/inicioMedico" element={<HomeDoctor />} />
-            <Route path="/atenderCita" element={<AtenderCita />} />
-          </>
-        )}
-
-        {/* Rutas para administrador */}
-        {userType === 'admin' && (
-          <>
-            <Route path="/homeAdmin" element={<HomeAdmin />} />
-            <Route path="/createmedico" element={<CreateMedico />} />
-            <Route path="/pqrsadmin" element={<PqrsAdmin />} />
-            <Route path="/historialconsultasmed" element={<HistorialConsultasMed />} />
-            <Route path="/crudmed" element={<CrudMed />} />
-          </>
-        )}
-
-        {/* Rutas compartidas para todos los tipos de usuario */}
-        <Route path="/maintenancePage" element={<MaintenancePage />} />
-        <Route path="/notFoundPage" element={<NotFoundPage />} />
-        <Route path="/maintenance" element={redirectToMaintenance} />
-      </Routes>
+      {/* Botón para recargar la página y borrar localStorage */}
+      <button onClick={reloadAndClearLocalStorage}>Recargar y borrar localStorage</button>
     </Router>
   );
 };
