@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/Home';
 import HomePatient from './pages/patient/HomePatient';
@@ -25,6 +25,11 @@ const AppRoutes = () => {
 
   // Función para redirigir a la página de mantenimiento si es necesario
   const redirectToMaintenance = () => <Navigate to="/maintenancePage" />;
+
+  // Simular el efecto de inicio de sesión
+  useEffect(() => {
+    // Aquí puedes colocar tu lógica de inicio de sesión, si es así
+  }, []);
 
   return (
     <Router>
