@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import LoginModal from '../patient/LoginModal'; // Importa el componente del modal
 
 const DoctorNavbar = () => {
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  
+  const doctorData = JSON.parse(localStorage.getItem('medicoData'));
 
-  const openLoginModal = () => {
-    setIsLoginModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsLoginModalOpen(false);
+  const handleLogout = () => {
+    localStorage.removeItem('userType');
+    localStorage.removeItem('medicoData');
+    // Recargar la página al cerrar sesión
+    window.location.href = '/'; // Cambia '/login' por la ruta que desees
   };
 
   return (
@@ -19,22 +18,22 @@ const DoctorNavbar = () => {
         <Link to="/" className="text-white text-2xl font-semibold">Clínica</Link>
       </div>
       <ul className="flex space-x-4 items-center">
-        <li>
-          <Link to="/historialMedico" className="text-white hover:text-blue-500 transition duration-300">Historial Médico</Link>
-        </li>
-        <li>
-          <Link to="/pqrs" className="text-white hover:text-blue-500 transition duration-300">Pqrs</Link>
-        </li>
-        <li>
-          <button
-            className="text-white bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-full transition duration-300"
-            onClick={openLoginModal}
-          >
-            Iniciar Sesión
-          </button>
-        </li>
+        {doctorData && (
+          <>
+            <li>
+              <span className="text-white">{`¡Hola, Dr. ${doctorData.userData[0][0].nombre.split(' ')[0]}!`}</span>
+            </li>
+            <li>
+              <button
+                className="text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded-full transition duration-300"
+                onClick={handleLogout}
+              >
+                Cerrar Sesión
+              </button>
+            </li>
+          </>
+        )}
       </ul>
-      {isLoginModalOpen && <LoginModal closeModal={closeModal} />}
     </nav>
   );
 }

@@ -113,7 +113,6 @@ const LoginModal = ({ closeModal }) => {
     console.log('Formulario enviado con datos de médico:', formDataDoctor);
 
     const loginSuccess = await UserService.loginDoctor(formDataDoctor);
-
     if (loginSuccess) {
       swal({
         title: "Inicio de sesión",

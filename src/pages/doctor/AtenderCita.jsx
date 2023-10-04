@@ -7,9 +7,6 @@ function AtenderCita() {
   const [historialVisible, setHistorialVisible] = useState(false);
 
   const handleGuardarAtencion = () => {
-    // Aquí puedes implementar la lógica para guardar la atención de la cita
-    // Puedes enviar el diagnóstico y tratamiento al servidor, por ejemplo.
-    // Luego redirige al médico de nuevo a la página de citas pendientes o donde sea necesario.
   };
 
   return (
@@ -109,7 +106,7 @@ function AtenderCita() {
 
         {/* Botón para Finalizar la Atención */}
         <div className="mt-4">
-        <Link to="/inicioMedico/">
+        <Link to="/">
           <button
             className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
             onClick={handleGuardarAtencion}

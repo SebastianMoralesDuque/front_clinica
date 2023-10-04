@@ -21,31 +21,28 @@ import MaintenancePage from './pages/MaintenancePage';
 
 const AppRoutes = () => {
   // Obtener el tipo de usuario almacenado en localStorage
-  const userType = localStorage.getItem('userType');
-  console.log(userType);
-
+  const userType = localStorage.getItem('');
   // Estado para forzar la actualización de las rutas al cambiar el tipo de usuario
   const [userTypeState, setUserTypeState] = useState(userType);
 
   // Función para redirigir a la página de mantenimiento si es necesario
   const redirectToMaintenance = () => <Navigate to="/maintenancePage" />;
 
-  // Simular el efecto de inicio de sesión
   useEffect(() => {
-    // Aquí puedes colocar tu lógica de inicio de sesión, si es así
+    // Obtener el tipo de usuario almacenado en localStorage
+    const storedUserType = localStorage.getItem('userType');
+  
+    // Actualizar el estado con el tipo de usuario
+    setUserTypeState(storedUserType);
   }, []);
-
-  // Función para recargar la página y borrar el contenido del localStorage
-  const reloadAndClearLocalStorage = () => {
-    localStorage.clear();
-    setUserTypeState(null); // Cambia el estado para forzar la actualización de las rutas
-  };
+  
 
   return (
+    
     <Router>
       {/* Renderizar el Navbar según el tipo de usuario o Navbar por defecto */}
-      {userTypeState === 'paciente' && <PatientNavbar />}
       {userTypeState === 'medico' && <DoctorNavbar />}
+      {userTypeState === 'paciente' && <PatientNavbar />}
       {userTypeState === 'admin' && <AdminNavbar />}
       {!userTypeState && <Navbar />}
 
@@ -59,12 +56,12 @@ const AppRoutes = () => {
         </Routes>
       ) : userTypeState === 'medico' ? (
         <Routes>
-          <Route path="/homeDoctor" element={<HomeDoctor />} />
+          <Route path="/" element={<HomeDoctor />} />
           <Route path="/atenderCita" element={<AtenderCita />} />
         </Routes>
       ) : userTypeState === 'admin' ? (
         <Routes>
-          <Route path="/homeAdmin" element={<HomeAdmin />} />
+          <Route path="/" element={<HomeAdmin />} />
           <Route path="/createmedico" element={<CreateMedico />} />
           <Route path="/pqrsadmin" element={<PqrsAdmin />} />
           <Route path="/historialconsultasmed" element={<HistorialConsultasMed />} />
@@ -82,8 +79,7 @@ const AppRoutes = () => {
         </Routes>
       )}
 
-      {/* Botón para recargar la página y borrar localStorage */}
-      <button onClick={reloadAndClearLocalStorage}>Recargar y borrar localStorage</button>
+
     </Router>
   );
 };

@@ -106,15 +106,19 @@ function HomePatient() {
     }
   };
 
+  const user = JSON.parse(localStorage.getItem('userData')) || null;
+
   return (
     <div className="container mx-auto p-4">
       <div className="mb-4">
         <div className="flex justify-between items-center bg-blue-100 p-4 rounded-lg">
           <div>
-            <h1 className="text-2xl font-bold">¡Bienvenido, {nombrePaciente}!</h1>
+          <h1 className="text-2xl font-bold">
+              ¡Bienvenid@, {user && user.userData && user.userData[0] && user.userData[0][0] && user.userData[0][0].nombre}!
+            </h1>
             <div className="text-sm">
-              <p className="text-gray-600">Número de Identificación: 1004516248</p>
-              <p className="text-gray-600">Ciudad de Residencia: Armenia</p>
+              <p className="text-gray-600">Número de Identificación: {user && user.userData && user.userData[0] && user.userData[0][0] && user.userData[0][0].cedula}</p>
+              <p className="text-gray-600">Ciudad de Residencia: {user && user.userData && user.userData[0] && user.userData[0][0] && user.userData[0][0].ciudad}</p>
             </div>
           </div>
           <button
