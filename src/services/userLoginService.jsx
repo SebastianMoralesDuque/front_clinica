@@ -1,4 +1,30 @@
-const login = async (url, formData, userType, storageKey) => {
+const loginUser = async (formData) => {
+  try {
+    const response = await fetch('http://localhost:9009/usuarios/gestion/login/paciente', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
+    if (response.ok) {
+      const userData = await response.json();
+
+      // Almacenar datos en el localStorage para el tipo "paciente"
+      localStorage.setItem('userType', 'paciente');
+      localStorage.setItem('userData', JSON.stringify(userData));
+
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error('Error al iniciar sesión:', error);
+    return false;
+  }
+};
+
+const loginAdmin = async (formData) => {
   try {
     const response = await fetch(url, {
       method: 'POST',

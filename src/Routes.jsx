@@ -42,6 +42,7 @@ const AppRoutes = () => {
   return (
     
     <Router>
+
       {/* Renderizar el Navbar según el tipo de usuario o Navbar por defecto */}
       {userTypeState === 'medico' && <DoctorNavbar />}
       {userTypeState === 'paciente' && <PatientNavbar />}
@@ -86,7 +87,7 @@ const AppRoutes = () => {
         </Routes>
       )}
 
-
+      {/* Botón para recargar la página y borrar localStorage */}
     </Router>
   );
 };
