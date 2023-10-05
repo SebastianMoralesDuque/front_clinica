@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/Home';
+import Servicios from './pages/Servicios';
+import Contacto from './pages/Contacto';
 import HomePatient from './pages/patient/HomePatient';
 import HistorialMedico from './pages/patient/HistorialMedico';
 import Pqrs from './pages/patient/Pqrs';
@@ -53,11 +55,13 @@ const AppRoutes = () => {
           <Route path="/historialMedico" element={<HistorialMedico />} />
           <Route path="/pqrs" element={<Pqrs />} />
           <Route path="/informacionPaciente" element={<InformacionPaciente />} />
+          <Route path="*" element={<Navigate to="/notFoundPage" />} />
         </Routes>
       ) : userTypeState === 'medico' ? (
         <Routes>
           <Route path="/" element={<HomeDoctor />} />
           <Route path="/atenderCita" element={<AtenderCita />} />
+          <Route path="*" element={<Navigate to="/notFoundPage" />} />
         </Routes>
       ) : userTypeState === 'admin' ? (
         <Routes>
@@ -66,10 +70,13 @@ const AppRoutes = () => {
           <Route path="/pqrsadmin" element={<PqrsAdmin />} />
           <Route path="/historialconsultasmed" element={<HistorialConsultasMed />} />
           <Route path="/crudmed" element={<CrudMed />} />
+          <Route path="*" element={<Navigate to="/notFoundPage" />} />
         </Routes>
       ) : (
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/servicios" element={<Servicios />} />
+          <Route path="/contacto" element={<Contacto />} />
           <Route path="/maintenancePage" element={<MaintenancePage />} />
           <Route path="/notFoundPage" element={<NotFoundPage />} />
           <Route path="/maintenance" element={redirectToMaintenance} />
