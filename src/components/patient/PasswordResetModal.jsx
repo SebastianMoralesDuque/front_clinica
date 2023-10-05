@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const PasswordResetModal = ({ closeModal }) => {
+const PasswordResetModal = ({ closeModal, cedula }) => {
   const [verificationCode, setVerificationCode] = useState(['', '', '', '', '', '']); // Usamos un array para los 6 dígitos
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -30,7 +30,7 @@ const PasswordResetModal = ({ closeModal }) => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Validar que el código de verificación no esté vacío y que las contraseñas coincidan
@@ -39,13 +39,31 @@ const PasswordResetModal = ({ closeModal }) => {
       return;
     }
 
-    // Aquí puedes agregar la lógica para enviar una solicitud al servidor
-    // para cambiar la contraseña del usuario con el código de verificación y la nueva contraseña.
-    // Puedes mostrar un mensaje de éxito o error según la respuesta del servidor.
-    console.log('Formulario de cambio de contraseña enviado con datos:', {
-      verificationCode: verificationCode.join(''), // Convertir el array en un solo código
-      newPassword,
-    });
+    try {
+      // Realizar la solicitud POST al servidor para cambiar la contraseña
+      const response = await fetch('http://localhost:9009/usuarios/gestion/login/cambiarContrasena', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          verificationCode: verificationCode.join(''), // Convertir el array en un solo código
+          newPassword,
+          cedula, // Puedes incluir la cédula si es necesaria en tu backend
+        }),
+      });
+
+      // Verificar si la solicitud fue exitosa (código de estado 2xx)
+      if (response.ok) {
+        console.log('Contraseña cambiada con éxito. Puedes manejar la respuesta del servidor aquí si es necesario.');
+      } else {
+        // Manejar errores si la solicitud no fue exitosa
+        console.error('Error en la solicitud:', response.status, response.statusText);
+      }
+    } catch (error) {
+      // Manejar errores de red o de la solicitud
+      console.error('Error en la solicitud:', error.message);
+    }
 
     // Cierra el modal después de enviar el formulario
     closeModal();
@@ -108,6 +126,6 @@ const PasswordResetModal = ({ closeModal }) => {
       </form>
     </div>
   );
-}
+};
 
 export default PasswordResetModal;

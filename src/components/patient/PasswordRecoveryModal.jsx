@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
-import PasswordResetModal from './PasswordResetModal'; // Importa el componente de cambio de contraseña
+import PasswordResetModal from './PasswordResetModal';
 
 const PasswordRecoveryModal = ({ closeModal }) => {
   const [formData, setFormData] = useState({
-    email: '',
+    cedula: '', // Cambiado de 'email' a 'cedula
   });
 
-  const [showPasswordResetModal, setShowPasswordResetModal] = useState(false); // Nuevo estado para el modal de cambio de contraseña
-
-  const [isFormSubmitted, setIsFormSubmitted] = useState(false); // Nuevo estado para rastrear si se ha enviado el formulario
+  const [showPasswordResetModal, setShowPasswordResetModal] = useState(false);
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -18,12 +17,30 @@ const PasswordRecoveryModal = ({ closeModal }) => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Aquí puedes agregar la lógica para enviar una solicitud al servidor
-    // para enviar un código de verificación al usuario con el correo electrónico proporcionado en formData.email.
-    // Puedes mostrar un mensaje de éxito o error según la respuesta del servidor.
-    console.log('Formulario de recuperación de contraseña enviado con datos:', formData);
+
+    try {
+      // Realizar la solicitud POST al servidor
+      const response = await fetch('http://localhost:9009/usuarios/gestion/login/recuperarContrasena', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ cedula: formData.cedula }),
+      });
+
+      // Verificar si la solicitud fue exitosa (código de estado 2xx)
+      if (response.ok) {
+        console.log('Solicitud exitosa. Puedes manejar la respuesta del servidor aquí si es necesario.');
+      } else {
+        // Manejar errores si la solicitud no fue exitosa
+        console.error('Error en la solicitud:', response.status, response.statusText);
+      }
+    } catch (error) {
+      // Manejar errores de red o de la solicitud
+      console.error('Error en la solicitud:', error.message);
+    }
 
     // Actualiza el estado para indicar que el formulario se ha enviado
     setIsFormSubmitted(true);
@@ -40,13 +57,13 @@ const PasswordRecoveryModal = ({ closeModal }) => {
           {!isFormSubmitted ? (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="mb-4">
-                <label htmlFor="email" className="block text-gray-800 font-medium">Email:</label>
+                <label htmlFor="cedula" className="block text-gray-800 font-medium">Cédula:</label>
                 <input
-                  type="email"
-                  id="email"
-                  name="email"
+                  type="text"
+                  id="cedula"
+                  name="cedula"
                   className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500"
-                  value={formData.email}
+                  value={formData.cedula}
                   onChange={handleInputChange}
                   required
                 />
@@ -64,11 +81,12 @@ const PasswordRecoveryModal = ({ closeModal }) => {
         </>
       ) : null}
 
-      {showPasswordResetModal && (
-        <PasswordResetModal closeModal={() => setShowPasswordResetModal(false)} />
-      )}
+{showPasswordResetModal && (
+  <PasswordResetModal closeModal={() => setShowPasswordResetModal(false)} cedula={formData.cedula} />
+)}
+
     </div>
   );
-}
+};
 
 export default PasswordRecoveryModal;
