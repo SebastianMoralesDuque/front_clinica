@@ -1,10 +1,17 @@
 import React, { useState } from 'react';
+import bcrypt, { hash } from 'bcryptjs';
 
 const PasswordResetModal = ({ closeModal, cedula }) => {
   const [verificationCode, setVerificationCode] = useState(['', '', '', '', '', '']); // Usamos un array para los 6 dígitos
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState(null);
+
+  const [formData, setFormData] = useState({
+      verificationCode: '',
+      passwordToSend: '',
+      cedula: cedula
+  });
 
   const handleVerificationCodeChange = (e, index) => {
     const value = e.target.value;
@@ -33,32 +40,48 @@ const PasswordResetModal = ({ closeModal, cedula }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validar que el código de verificación no esté vacío y que las contraseñas coincidan
+    // Valida que el código de verificación no esté vacío y que las contraseñas coincidan
     if (verificationCode.some((digit) => digit === '') || newPassword !== confirmPassword) {
       setErrorMessage('Por favor, complete todos los campos correctamente.');
       return;
     }
+   
+    const hashedPassword = await bcrypt.hash(newPassword, 10); //Encripta la contraseña antes de mandarla al back para cambiarla
+    formData.passwordToSend = hashedPassword;
+    formData.verificationCode = verificationCode.join('');
 
     try {
+      console.log(formData);
       // Realizar la solicitud POST al servidor para cambiar la contraseña
       const response = await fetch('http://localhost:9009/usuarios/gestion/login/cambiarContrasena', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          verificationCode: verificationCode.join(''), // Convertir el array en un solo código
-          newPassword,
-          cedula, // Puedes incluir la cédula si es necesaria en tu backend
-        }),
+        body: JSON.stringify(formData),
       });
 
       // Verificar si la solicitud fue exitosa (código de estado 2xx)
       if (response.ok) {
         console.log('Contraseña cambiada con éxito. Puedes manejar la respuesta del servidor aquí si es necesario.');
+        swal({
+          title: 'Recuperar Contraseña',
+          text: 'Su contraseña ha sido modificada con éxito.',
+          icon: 'success',
+          timer: '3000',
+          buttons: false,
+        });
+        closeModal();
       } else {
         // Manejar errores si la solicitud no fue exitosa
         console.error('Error en la solicitud:', response.status, response.statusText);
+        swal({
+          title: 'Recuperar Contraseña',
+          text: 'El código ingresado es incorrecto.',
+          icon: 'error',
+          timer: '3000',
+          buttons: false,
+        });
       }
     } catch (error) {
       // Manejar errores de red o de la solicitud

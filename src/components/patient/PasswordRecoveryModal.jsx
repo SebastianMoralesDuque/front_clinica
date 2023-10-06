@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import PasswordResetModal from './PasswordResetModal';
+import swal from 'sweetalert';
 
 const PasswordRecoveryModal = ({ closeModal }) => {
   const [formData, setFormData] = useState({
-    cedula: '', // Cambiado de 'email' a 'cedula
+    cedula: '',
   });
 
   const [showPasswordResetModal, setShowPasswordResetModal] = useState(false);
@@ -33,20 +34,33 @@ const PasswordRecoveryModal = ({ closeModal }) => {
       // Verificar si la solicitud fue exitosa (código de estado 2xx)
       if (response.ok) {
         console.log('Solicitud exitosa. Puedes manejar la respuesta del servidor aquí si es necesario.');
+        swal({
+          title: 'Código de Verificación',
+          text: 'El código de verificación ha sido enviado \n con éxito a su correo registrado.',
+          icon: 'success',
+          timer: '3000',
+          buttons: false,
+        });
+        // Mostrar el modal de cambio de contraseña después de enviar el formulario
+        setShowPasswordResetModal(true);
+        // Actualiza el estado para indicar que el formulario se ha enviado
+        setIsFormSubmitted(true);
       } else {
         // Manejar errores si la solicitud no fue exitosa
         console.error('Error en la solicitud:', response.status, response.statusText);
+        swal({
+          title: 'Afiliado No Encontrado',
+          text: 'La cédula proporcionada no corresponde \n a ningún afiliado existente.',
+          icon: 'error',
+          timer: '3000',
+          buttons: false,
+        });
+        closeModal();
       }
     } catch (error) {
       // Manejar errores de red o de la solicitud
       console.error('Error en la solicitud:', error.message);
     }
-
-    // Actualiza el estado para indicar que el formulario se ha enviado
-    setIsFormSubmitted(true);
-
-    // Mostrar el modal de cambio de contraseña después de enviar el formulario
-    setShowPasswordResetModal(true);
   };
 
   return (
