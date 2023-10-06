@@ -1,28 +1,32 @@
 import React, { useState } from 'react';
-import bcrypt, { hash } from 'bcryptjs';
+import bcrypt from 'bcryptjs';
 
 const PasswordResetModal = ({ closeModal, cedula }) => {
-  const [verificationCode, setVerificationCode] = useState(['', '', '', '', '', '']); // Usamos un array para los 6 dígitos
+  const [verificationCode, setVerificationCode] = useState(['', '', '', '', '', '']);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState(null);
 
   const [formData, setFormData] = useState({
-      verificationCode: '',
-      passwordToSend: '',
-      cedula: cedula
+    verificationCode: '',
+    passwordToSend: '',
+    cedula: cedula,
   });
 
   const handleVerificationCodeChange = (e, index) => {
     const value = e.target.value;
-    if (value.match(/^\d+$/)) {
-      // Asegúrate de que solo se ingresen dígitos
-      const newVerificationCode = [...verificationCode];
+    const newVerificationCode = [...verificationCode];
+
+    if (value.match(/^\d+$/) || value === '') {
+      // Permitir dígitos o valores vacíos en el código
       newVerificationCode[index] = value;
       setVerificationCode(newVerificationCode);
 
-      // Avanzar al siguiente campo de entrada cuando se ingresa un dígito válido
-      if (index < 5 && value !== '') {
+      if (value === '' && index > 0) {
+        // Si el usuario borra un dígito y el campo está vacío, regresar al campo anterior
+        document.getElementById(`verificationCode${index - 1}`).focus();
+      } else if (index < 5 && value !== '') {
+        // Avanzar al siguiente campo de entrada cuando se ingresa un dígito válido
         document.getElementById(`verificationCode${index + 1}`).focus();
       }
     }
@@ -40,19 +44,16 @@ const PasswordResetModal = ({ closeModal, cedula }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Valida que el código de verificación no esté vacío y que las contraseñas coincidan
     if (verificationCode.some((digit) => digit === '') || newPassword !== confirmPassword) {
-      setErrorMessage('Por favor, complete todos los campos correctamente.');
+      setErrorMessage('Las contraseñas no coinciden o algún campo está vacío.');
       return;
     }
-   
-    const hashedPassword = await bcrypt.hash(newPassword, 10); //Encripta la contraseña antes de mandarla al back para cambiarla
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
     formData.passwordToSend = hashedPassword;
     formData.verificationCode = verificationCode.join('');
 
     try {
-      console.log(formData);
-      // Realizar la solicitud POST al servidor para cambiar la contraseña
       const response = await fetch('http://localhost:9009/usuarios/gestion/login/cambiarContrasena', {
         method: 'POST',
         headers: {
@@ -61,35 +62,41 @@ const PasswordResetModal = ({ closeModal, cedula }) => {
         body: JSON.stringify(formData),
       });
 
-      // Verificar si la solicitud fue exitosa (código de estado 2xx)
       if (response.ok) {
-        console.log('Contraseña cambiada con éxito. Puedes manejar la respuesta del servidor aquí si es necesario.');
+        // Mostrar un mensaje, por ejemplo, usando la biblioteca swal
         swal({
-          title: 'Recuperar Contraseña',
-          text: 'Su contraseña ha sido modificada con éxito.',
+          title: 'Contraseña cambiada',
+          text: 'Contraseña cambiada con éxito.',
           icon: 'success',
-          timer: '3000',
+          timer: '2000', // Mostrar el mensaje durante 2 segundos
           buttons: false,
         });
-        closeModal();
+
+        // Esperar 2 segundos antes de redirigir y cerrar el modal
+        setTimeout(() => {
+          // Redirigir a '/'
+          window.location.href = '/';
+          closeModal(); // Cierra el modal después de enviar el formulario
+        }, 2000);
       } else {
         // Manejar errores si la solicitud no fue exitosa
         console.error('Error en la solicitud:', response.status, response.statusText);
         swal({
-          title: 'Recuperar Contraseña',
-          text: 'El código ingresado es incorrecto.',
+          title: 'Codigo ingresado incorrecto',
+          text: 'El código proporcionado no corresponde.',
           icon: 'error',
           timer: '3000',
           buttons: false,
         });
+        setTimeout(() => {
+          // Redirigir a '/'
+          window.location.href = '/';
+          closeModal(); // Cierra el modal después de enviar el formulario
+        }, 2000);
       }
     } catch (error) {
-      // Manejar errores de red o de la solicitud
       console.error('Error en la solicitud:', error.message);
     }
-
-    // Cierra el modal después de enviar el formulario
-    closeModal();
   };
 
   return (

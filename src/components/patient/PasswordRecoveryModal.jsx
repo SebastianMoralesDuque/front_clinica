@@ -9,6 +9,7 @@ const PasswordRecoveryModal = ({ closeModal }) => {
 
   const [showPasswordResetModal, setShowPasswordResetModal] = useState(false);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -22,6 +23,9 @@ const PasswordRecoveryModal = ({ closeModal }) => {
     e.preventDefault();
 
     try {
+      // Mostrar indicador de carga
+      setIsLoading(true);
+
       // Realizar la solicitud POST al servidor
       const response = await fetch('http://localhost:9009/usuarios/gestion/login/recuperarContrasena', {
         method: 'POST',
@@ -31,12 +35,15 @@ const PasswordRecoveryModal = ({ closeModal }) => {
         body: JSON.stringify({ cedula: formData.cedula }),
       });
 
+      // Ocultar indicador de carga
+      setIsLoading(false);
+
       // Verificar si la solicitud fue exitosa (código de estado 2xx)
       if (response.ok) {
         console.log('Solicitud exitosa. Puedes manejar la respuesta del servidor aquí si es necesario.');
         swal({
           title: 'Código de Verificación',
-          text: 'El código de verificación ha sido enviado \n con éxito a su correo registrado.',
+          text: 'Código de verificación enviado.',
           icon: 'success',
           timer: '3000',
           buttons: false,
@@ -50,7 +57,7 @@ const PasswordRecoveryModal = ({ closeModal }) => {
         console.error('Error en la solicitud:', response.status, response.statusText);
         swal({
           title: 'Afiliado No Encontrado',
-          text: 'La cédula proporcionada no corresponde \n a ningún afiliado existente.',
+          text: 'No existe paciente con la cedula.',
           icon: 'error',
           timer: '3000',
           buttons: false,
@@ -58,6 +65,9 @@ const PasswordRecoveryModal = ({ closeModal }) => {
         closeModal();
       }
     } catch (error) {
+      // Ocultar indicador de carga en caso de error
+      setIsLoading(false);
+
       // Manejar errores de red o de la solicitud
       console.error('Error en la solicitud:', error.message);
     }
@@ -86,8 +96,9 @@ const PasswordRecoveryModal = ({ closeModal }) => {
                 <button
                   type="submit"
                   className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-full focus:outline-none focus:ring focus:border-blue-700"
+                  disabled={isLoading} // Deshabilitar el botón mientras se está cargando
                 >
-                  Recuperar Contraseña
+                  {isLoading ? 'Cargando...' : 'Recuperar Contraseña'}
                 </button>
               </div>
             </form>
@@ -95,10 +106,9 @@ const PasswordRecoveryModal = ({ closeModal }) => {
         </>
       ) : null}
 
-{showPasswordResetModal && (
-  <PasswordResetModal closeModal={() => setShowPasswordResetModal(false)} cedula={formData.cedula} />
-)}
-
+      {showPasswordResetModal && (
+        <PasswordResetModal closeModal={() => setShowPasswordResetModal(false)} cedula={formData.cedula} />
+      )}
     </div>
   );
 };
