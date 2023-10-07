@@ -38,7 +38,7 @@ const AppRoutes = () => {
     setUserTypeState(storedUserType);
   }, []);
   
-
+  console.log(localStorage.getItem(''));
   return (
     
     <Router>
@@ -67,10 +67,10 @@ const AppRoutes = () => {
       ) : userTypeState === 'admin' ? (
         <Routes>
           <Route path="/" element={<HomeAdmin />} />
+          <Route path="/crudmed" element={<CrudMed />} />
           <Route path="/createmedico" element={<CreateMedico />} />
           <Route path="/pqrsadmin" element={<PqrsAdmin />} />
           <Route path="/historialconsultasmed" element={<HistorialConsultasMed />} />
-          <Route path="/crudmed" element={<CrudMed />} />
           <Route path="*" element={<Navigate to="/notFoundPage" />} />
         </Routes>
       ) : (
@@ -83,7 +83,7 @@ const AppRoutes = () => {
           <Route path="/maintenance" element={redirectToMaintenance} />
           
           {/* Redirección a NotFoundPage en caso de no encontrar la página */}
-          <Route path="*" element={<Navigate to="/notFoundPage" />} />
+          <Route path="*" element={<NotFoundPage />} />   
         </Routes>
       )}
 

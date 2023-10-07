@@ -60,12 +60,14 @@ const loginDoctor = async (formData) => {
       },
       body: JSON.stringify(formData),
     });
-
+    
     if (response.ok) {
       const medicoData = await response.json();
+      console.log("desde servicvio");
 
+      console.log(medicoData);
       // Almacenar datos en el localStorage para el tipo "médico"
-      localStorage.setItem('medicoType', 'medico');
+      localStorage.setItem('userType', 'medico');
       localStorage.setItem('medicoData', JSON.stringify(medicoData));
 
       return true;
