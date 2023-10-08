@@ -1,36 +1,62 @@
 import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import EspecializacionService from '../../services/EspecializacionService';
 
-function AgendarCitaModal({ modalVisible, closeModal, handleAgendarCita }) {
+const AgendarCitaModal = ({ modalVisible, closeModal, handleAgendarCita }) => {
   const [formularioCita, setFormularioCita] = useState({
     especializacion: '',
     medico: '',
-    fecha: null, // Agregamos el campo fecha
+    fecha: null,
     hora: '',
     motivo: '',
   });
 
-  const [especializaciones] = useState([
-    'Especialización 1',
-    'Especialización 2',
-    // Agrega más especializaciones según tus necesidades
-  ]);
-
-  const [medicosDisponibles, setMedicosDisponibles] = useState({
-    'Especialización 1': [
-      { nombre: 'Dr. Juan Pérez', horarios: ['9:00 AM - 11:00 AM', '2:00 PM - 4:00 PM'] },
-      // Agrega más médicos y sus horarios según la especialización
-    ],
-    'Especialización 2': [
-      { nombre: 'Dra. María González', horarios: ['10:00 AM - 12:00 PM', '3:00 PM - 5:00 PM'] },
-      // Agrega más médicos y sus horarios según la especialización
-    ],
-    // Agrega más especializaciones y sus médicos disponibles
-  });
-
+  const [especializaciones, setEspecializaciones] = useState([]);
+  const [medicosDisponibles, setMedicosDisponibles] = useState({});
   const [horariosMedico, setHorariosMedico] = useState([]);
-  const [fechaSeleccionada, setFechaSeleccionada] = useState(null); // Estado para la fecha seleccionada
+  const [fechaSeleccionada, setFechaSeleccionada] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const especialidadesData = await EspecializacionService.getEspecialidades();
+        setEspecializaciones(especialidadesData);
+      } catch (error) {
+        console.error('Error al obtener especialidades:', error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const handleEspecializacionChange = async (e) => {
+    const especializacionSeleccionada = e.target.value;
+
+    try {
+      const url = `http://localhost:9009/medicos/gestion/medicosPorEspecializacion?especializacion=${encodeURIComponent(especializacionSeleccionada)}`;
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setMedicosDisponibles({ [especializacionSeleccionada]: data });
+      } else {
+        console.error('Error al obtener médicos por especialización:', response.status);
+      }
+    } catch (error) {
+      console.error('Error de red:', error);
+    }
+
+    setFormularioCita({
+      ...formularioCita,
+      especializacion: especializacionSeleccionada,
+      medico: '',
+    });
+  };
 
   const handleFormularioChange = (e) => {
     const { name, value } = e.target;
@@ -64,7 +90,6 @@ function AgendarCitaModal({ modalVisible, closeModal, handleAgendarCita }) {
     }
   };
 
-  // Agregar un manejador de eventos para cerrar el modal al hacer clic fuera de él
   useEffect(() => {
     const handleCloseModalOnOutsideClick = (e) => {
       if (modalVisible && e.target.classList.contains('modal-overlay')) {
@@ -79,6 +104,8 @@ function AgendarCitaModal({ modalVisible, closeModal, handleAgendarCita }) {
     };
   }, [modalVisible, closeModal]);
 
+  console.log(medicosDisponibles);
+
   return (
     modalVisible && (
       <div className="fixed top-0 left-0 flex items-center justify-center w-full h-full bg-gray-700 bg-opacity-50 modal-overlay">
@@ -92,13 +119,13 @@ function AgendarCitaModal({ modalVisible, closeModal, handleAgendarCita }) {
               <select
                 name="especializacion"
                 className="w-full border border-gray-300 rounded py-2 px-3"
-                onChange={handleFormularioChange}
+                onChange={handleEspecializacionChange}
                 value={formularioCita.especializacion}
               >
                 <option value="">Seleccionar Especialización</option>
                 {especializaciones.map((esp) => (
-                  <option key={esp} value={esp}>
-                    {esp}
+                  <option key={esp.id} value={esp.nombre}>
+                    {esp.nombre}
                   </option>
                 ))}
               </select>
@@ -115,9 +142,9 @@ function AgendarCitaModal({ modalVisible, closeModal, handleAgendarCita }) {
                   value={formularioCita.medico}
                 >
                   <option value="">Seleccionar Médico</option>
-                  {medicosDisponibles[formularioCita.especializacion].map((medico) => (
-                    <option key={medico.nombre} value={medico.nombre}>
-                      {medico.nombre}
+                  {medicosDisponibles[formularioCita.especializacion]?.map((medico) => (
+                    <option key={medico[0]} value={medico[0]}>
+                      {medico[0].nombre}
                     </option>
                   ))}
                 </select>
@@ -131,7 +158,7 @@ function AgendarCitaModal({ modalVisible, closeModal, handleAgendarCita }) {
                 <DatePicker
                   selected={fechaSeleccionada}
                   onChange={handleFechaChange}
-                  minDate={new Date()} // Solo permitir fechas futuras
+                  minDate={new Date()}
                   className="w-full border border-gray-300 rounded py-2 px-3"
                 />
               </div>
@@ -196,6 +223,6 @@ function AgendarCitaModal({ modalVisible, closeModal, handleAgendarCita }) {
       </div>
     )
   );
-}
+};
 
 export default AgendarCitaModal;
