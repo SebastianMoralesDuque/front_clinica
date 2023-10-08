@@ -9,7 +9,6 @@ const PasswordRecoveryModal = ({ closeModal }) => {
 
   const [showPasswordResetModal, setShowPasswordResetModal] = useState(false);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -23,8 +22,13 @@ const PasswordRecoveryModal = ({ closeModal }) => {
     e.preventDefault();
 
     try {
-      // Mostrar indicador de carga
-      setIsLoading(true);
+      // Mostrar mensaje de carga
+      swal({
+        title: 'Cargando...',
+        text: 'Por favor, espera un momento.',
+        icon: 'info',
+        buttons: false,
+      });
 
       // Realizar la solicitud POST al servidor
       const response = await fetch('http://localhost:9009/usuarios/gestion/login/recuperarContrasena', {
@@ -35,8 +39,8 @@ const PasswordRecoveryModal = ({ closeModal }) => {
         body: JSON.stringify({ cedula: formData.cedula }),
       });
 
-      // Ocultar indicador de carga
-      setIsLoading(false);
+      // Cerrar mensaje de carga
+      swal.close();
 
       // Verificar si la solicitud fue exitosa (código de estado 2xx)
       if (response.ok) {
@@ -65,11 +69,10 @@ const PasswordRecoveryModal = ({ closeModal }) => {
         closeModal();
       }
     } catch (error) {
-      // Ocultar indicador de carga en caso de error
-      setIsLoading(false);
-
       // Manejar errores de red o de la solicitud
       console.error('Error en la solicitud:', error.message);
+      // Cerrar mensaje de carga en caso de error
+      swal.close();
     }
   };
 
@@ -96,9 +99,8 @@ const PasswordRecoveryModal = ({ closeModal }) => {
                 <button
                   type="submit"
                   className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-full focus:outline-none focus:ring focus:border-blue-700"
-                  disabled={isLoading} // Deshabilitar el botón mientras se está cargando
                 >
-                  {isLoading ? 'Cargando...' : 'Recuperar Contraseña'}
+                  Recuperar Contraseña
                 </button>
               </div>
             </form>
