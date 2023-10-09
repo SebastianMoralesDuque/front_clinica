@@ -4,7 +4,6 @@ import swal from 'sweetalert';
 import bcrypt from 'bcryptjs';
 import { Link } from 'react-router-dom';
 import EspecializacionService from '../../services/EspecializacionService';
-
 import userRegisterService from '../../services/userRegisterService';
 
 function CreateMedico() {
@@ -175,6 +174,7 @@ function CreateMedico() {
           placeholder="Cédula"
           onChange={handleInputChange}
           className="p-2 w-full border rounded"
+          maxLength={10}
         />
         <input type="text" name="nombre" placeholder="Nombre" onChange={handleInputChange} className="p-2 w-full border rounded" />
         <input type="password" name="contrasena" placeholder="Contraseña" onChange={handleInputChange} className="p-2 w-full border rounded" />
@@ -182,7 +182,7 @@ function CreateMedico() {
         {errores.confirmarContrasena && <p className="text-red-500">{errores.confirmarContrasena}</p>}
         <input type="email" name="email" placeholder="Correo Electrónico" onChange={handleInputChange} className="p-2 w-full border rounded" />
         {errores.email && <p className="text-red-500">{errores.email}</p>}
-        <input type="tel" name="telefono" placeholder="Teléfono" onChange={handleInputChange} className="p-2 w-full border rounded" />
+        <input type="tel" name="telefono" placeholder="Teléfono" onChange={handleInputChange} className="p-2 w-full border rounded" maxLength={10}/>
 
         <Select
           options={ciudades.map(ciudad => ({ value: ciudad.name, label: ciudad.name }))}
