@@ -35,7 +35,7 @@ const ModalInfo = ({ isOpen, closeModal, userData, userData2, deleteAccount }) =
       <div className="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex" onClick={closeModal}>
         {isOpen && (
           <div className="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex" onClick={closeModal}>
-            <div className="relative p-8 bg-white mx-auto my-8 max-w-2xl rounded-md text-center" onClick={(e) => e.stopPropagation()}>
+            <div className="relative p-8 bg-white mx-auto my-8 w-full md:max-w-2xl rounded-md text-center" onClick={(e) => e.stopPropagation()}>
               <h2 className="text-2xl font-semibold mb-4">{isEditing ? 'Editar Información' : 'Perfil de Usuario'}</h2>
               <button className="absolute top-4 right-4 text-gray-700 hover:text-gray-900" onClick={closeModal}>
                 &times;
@@ -45,10 +45,10 @@ const ModalInfo = ({ isOpen, closeModal, userData, userData2, deleteAccount }) =
               </div>
               {isEditing ? (
                 <EditForm
-                detallesAEditar={detallesAEditar}
-                handleFieldChange={handleFieldChange}
-                handleGoBack={handleGoBack}
-              />
+                  detallesAEditar={detallesAEditar}
+                  handleFieldChange={handleFieldChange}
+                  handleGoBack={handleGoBack}
+                />
               ) : (
                 <table className="table-auto w-full">
                   <tbody>

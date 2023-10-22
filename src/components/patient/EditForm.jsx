@@ -69,80 +69,88 @@ const EditForm = ({ detallesAEditar, handleFieldChange, handleGoBack }) => {
 
   return (
     <div>
-      <form className="mt-4">
-        <div className="mb-4">
-          <label className="block text-gray-800">Subir Foto</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="w-full border p-2 rounded-md"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-800">Cédula</label>
-          <input
-            type="text"
-            value={detallesAEditar.cedula}
-            disabled
-            className="w-full border p-2 rounded-md"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-800">Email</label>
-          <input
-            type="text"
-            value={detallesAEditar.email}
-            onChange={(e) => handleFieldChange('email', e.target.value)}
-            className="w-full border p-2 rounded-md"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-800">Teléfono</label>
-          <input
-            type="text"
-            value={detallesAEditar.telefono}
-            onChange={(e) => handleFieldChange('telefono', e.target.value)}
-            className="w-full border p-2 rounded-md"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-800">Alergias</label>
-          <input
-            type="text"
-            value={detallesAEditar.alergias}
-            onChange={(e) => handleFieldChange('alergias', e.target.value)}
-            className="w-full border p-2 rounded-md"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-800">EPS</label>
-          <select
-            value={selectedEps}
-            onChange={(e) => setSelectedEps(e.target.value)}
-            className="w-full border p-2 rounded-md"
-          >
-            <option key="" value="" disabled>
-              Seleccione EPS
-            </option>
-            {epsOptions.map((eps, index) => (
-              <option key={index} value={eps.nombre}>
-                {eps.nombre}
-              </option>
-            ))}
-          </select>
-        </div>
-        <button
-          type="button"
-          onClick={handleSaveChanges}
-          className="bg-blue-500 text-white px-4 py-2 hover:bg-blue-600"
+<form className="mt-4">
+  <div className="grid grid-cols-2 gap-4">
+    <div>
+      <div className="mb-4">
+        <label className="block text-gray-800">Subir Foto</label>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          className="w-full border p-2 rounded-md"
+        />
+      </div>
+      <div className="mb-4">
+        <label className="block text-gray-800">Cédula</label>
+        <input
+          type="text"
+          value={detallesAEditar.cedula}
+          disabled
+          className="w-full border p-2 rounded-md"
+        />
+      </div>
+      <div className="mb-4">
+        <label className="block text-gray-800">Email</label>
+        <input
+          type="text"
+          value={detallesAEditar.email}
+          onChange={(e) => handleFieldChange('email', e.target.value)}
+          className="w-full border p-2 rounded-md"
+        />
+      </div>
+    </div>
+    <div>
+      <div className="mb-4">
+        <label className="block text-gray-800">Teléfono</label>
+        <input
+          type="text"
+          value={detallesAEditar.telefono}
+          onChange={(e) => handleFieldChange('telefono', e.target.value)}
+          className="w-full border p-2 rounded-md"
+        />
+      </div>
+      <div className="mb-4">
+        <label className="block text-gray-800">Alergias</label>
+        <input
+          type="text"
+          value={detallesAEditar.alergias}
+          onChange={(e) => handleFieldChange('alergias', e.target.value)}
+          className="w-full border p-2 rounded-md"
+        />
+      </div>
+      <div className="mb-4">
+        <label className="block text-gray-800">EPS</label>
+        <select
+          value={selectedEps}
+          onChange={(e) => setSelectedEps(e.target.value)}
+          className="w-full border p-2 rounded-md"
         >
-          Guardar Cambios
-        </button>
-      </form>
-      <button onClick={handleGoBack} className="mt-4 bg-gray-500 text-white px-4 py-2 hover:bg-gray-600">
-        Regresar
-      </button>
+          <option key="" value="" disabled>
+            Seleccione EPS
+          </option>
+          {epsOptions.map((eps, index) => (
+            <option key={index} value={eps.nombre}>
+              {eps.nombre}
+            </option>
+          ))}
+        </select>
+      </div>
+    </div>
+    <button
+      type="button"
+      onClick={handleSaveChanges}
+      className="bg-blue-500 text-white px-4 py-2 hover:bg-blue-600"
+    >
+      Guardar Cambios
+    </button>
+    <button onClick={handleGoBack} className="bg-gray-500 text-white px-4 py-2 hover:bg-gray-600">
+      Regresar
+    </button>
+  </div>
+
+</form>
+
     </div>
   );
 };
