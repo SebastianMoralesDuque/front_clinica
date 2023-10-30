@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import EspecializacionService from '../../services/EspecializacionService';
+import swal from 'sweetalert';
 
 const AgendarCitaModal = ({ modalVisible, closeModal, handleAgendarCita }) => {
   const [formularioCita, setFormularioCita] = useState({
@@ -31,6 +32,8 @@ const AgendarCitaModal = ({ modalVisible, closeModal, handleAgendarCita }) => {
 
   const handleEspecializacionChange = async (e) => {
     const especializacionSeleccionada = e.target.value;
+
+    console.log(JSON.parse(localStorage.getItem('userData')).userData[0][1].cedula_usuario);
 
     try {
       const url = `http://localhost:9009/medicos/gestion/medicosPorEspecializacion?especializacion=${encodeURIComponent(especializacionSeleccionada)}`;
@@ -66,30 +69,103 @@ const AgendarCitaModal = ({ modalVisible, closeModal, handleAgendarCita }) => {
     });
   };
 
-  const handleFechaChange = (date) => {
-    setFechaSeleccionada(date);
-    setFormularioCita({
-      ...formularioCita,
-      fecha: date,
-    });
-  };
 
-  const handleSubmitFormulario = (e) => {
-    e.preventDefault();
-    if (
-      formularioCita.especializacion &&
-      formularioCita.medico &&
-      formularioCita.fecha &&
-      formularioCita.hora &&
-      formularioCita.motivo
-    ) {
-      handleAgendarCita(formularioCita);
-      closeModal();
-    } else {
-      alert('Por favor, completa todos los campos.');
+
+  const handleFechaChange = async (date) => {
+    setFechaSeleccionada(date);
+
+    if (formularioCita.medico) {
+      // Realizar la petición al backend para obtener las horas disponibles
+      try {
+        const url = `http://localhost:9009/citas/gestion/horas_disponibles`;
+        const data = {
+          cedula_medico: medicosDisponibles[formularioCita.especializacion]?.[0]?.[0]?.cedula,
+          fecha_cita: date.toISOString().split('T')[0], // Formatear la fecha a 'yyyy-MM-dd'
+        };
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+
+        if (response.ok) {
+          const horarios = await response.json();
+          setHorariosMedico(horarios);
+        } else {
+          console.error('Error al obtener las horas disponibles:', response.status);
+        }
+      } catch (error) {
+        console.error('Error de red:', error);
+      }
     }
   };
 
+  const handleSubmitFormulario = async (e) => {
+    e.preventDefault();
+  
+    if (
+      formularioCita.especializacion &&
+      formularioCita.medico &&
+      fechaSeleccionada &&
+      formularioCita.hora &&
+      formularioCita.motivo
+    ) {
+      try {
+        swal({
+          title: "Agendando Cita",
+          text: "Por favor, espera...",
+          icon: "info",
+          buttons: false,
+          closeOnClickOutside: false,
+          closeOnEsc: false,
+        });
+  
+        const url = 'http://localhost:9009/citas/gestion';
+        const cedulaPaciente = JSON.parse(localStorage.getItem('userData')).userData[0][1].cedula_usuario;
+        const data = {
+          fecha_cita: fechaSeleccionada.toISOString().split('T')[0],
+          hora_cita: "16:20:00",
+          cedula_medico: medicosDisponibles[formularioCita.especializacion]?.[0]?.[0]?.cedula,
+          cedula_paciente: cedulaPaciente,
+          estado: 'Agendada',
+          motivo: formularioCita.motivo,
+        };
+  
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+  
+        if (response.ok) {
+          swal("Cita Agendada", "¡Cita agendada con éxito!", "success");
+          closeModal();
+  
+          // Limpia los campos restableciendo el estado del formulario
+          setFormularioCita({
+            especializacion: '',
+            medico: '',
+            fecha: null,
+            hora: '',
+            motivo: '',
+          });
+        } else {
+          console.error('Error al agendar la cita:', response.status);
+          swal("Error", "Hubo un problema al agendar la cita.", "error");
+        }
+      } catch (error) {
+        console.error('Error de red:', error);
+        swal("Error", "Hubo un problema al agendar la cita.", "error");
+      }
+    } else {
+      swal("Campos Incompletos", "Por favor, completa todos los campos.", "warning");
+    }
+  };
+  
   useEffect(() => {
     const handleCloseModalOnOutsideClick = (e) => {
       if (modalVisible && e.target.classList.contains('modal-overlay')) {
@@ -104,7 +180,7 @@ const AgendarCitaModal = ({ modalVisible, closeModal, handleAgendarCita }) => {
     };
   }, [modalVisible, closeModal]);
 
-  console.log(medicosDisponibles);
+  console.log(medicosDisponibles[formularioCita.especializacion]?.[0]?.[0]?.cedula);
 
   return (
     modalVisible && (
@@ -183,15 +259,6 @@ const AgendarCitaModal = ({ modalVisible, closeModal, handleAgendarCita }) => {
                 </select>
               </div>
             )}
-            {formularioCita.medico && fechaSeleccionada && (
-              <div className="mb-4">
-                <ul>
-                  {horariosMedico.map((horario, index) => (
-                    <li key={index}>{horario}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
             <div className="mb-6">
               <label className="block text-gray-700 text-sm font-bold mb-2">
                 Motivo para Consulta:
@@ -222,9 +289,8 @@ const AgendarCitaModal = ({ modalVisible, closeModal, handleAgendarCita }) => {
         </div>
       </div>
     )
-  );
+  );  
 };
 
-//prueba
 
 export default AgendarCitaModal;
