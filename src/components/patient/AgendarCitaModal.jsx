@@ -126,7 +126,7 @@ const AgendarCitaModal = ({ modalVisible, closeModal, handleAgendarCita }) => {
         const cedulaPaciente = JSON.parse(localStorage.getItem('userData')).userData[0][1].cedula_usuario;
         const data = {
           fecha_cita: fechaSeleccionada.toISOString().split('T')[0],
-          hora_cita: "16:20:00",
+          hora_cita: formularioCita.hora,
           cedula_medico: medicosDisponibles[formularioCita.especializacion]?.[0]?.[0]?.cedula,
           cedula_paciente: cedulaPaciente,
           estado: 'Agendada',

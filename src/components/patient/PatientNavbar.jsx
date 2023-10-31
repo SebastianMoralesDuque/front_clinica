@@ -104,7 +104,7 @@ const PatientNavbar = () => {
   return (
     <nav className="bg-gray-800 py-4 px-6 flex justify-between items-center">
       <Link to="/" className="text-white text-2xl font-semibold">
-        Clínica
+        Clínica San Gabriel
       </Link>
       {user && (
         <div className="flex items-center">
