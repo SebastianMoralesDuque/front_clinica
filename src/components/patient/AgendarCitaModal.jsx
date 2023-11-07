@@ -143,7 +143,11 @@ const AgendarCitaModal = ({ modalVisible, closeModal, handleAgendarCita }) => {
   
         if (response.ok) {
           swal("Cita Agendada", "¡Cita agendada con éxito!", "success");
+          
           closeModal();
+          setTimeout(() => {
+            window.location.reload();
+          }, 1600);
   
           // Limpia los campos restableciendo el estado del formulario
           setFormularioCita({

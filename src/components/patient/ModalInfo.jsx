@@ -65,8 +65,11 @@ const ModalInfo = ({ isOpen, closeModal, userData, userData2, deleteAccount }) =
                     })}
                     <tr>
                       <td className="border px-4 py-2">Fecha de Nacimiento</td>
-                      <td className="border px-4 py-2">{userData2.fecha_nacimiento}</td>
+                      <td className="border px-4 py-2">
+                        {userData2.fecha_nacimiento ? userData2.fecha_nacimiento.substring(0, 10) : ''}
+                      </td>
                     </tr>
+
                     <tr>
                       <td className="border px-4 py-2">Alergias</td>
                       <td className="border px-4 py-2">{userData2.alergias}</td>

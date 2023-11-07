@@ -34,7 +34,7 @@ function DocCitasPend() {
     <div className="bg-blue-100 p-4 rounded-lg shadow-md mb-4 overflow-x-auto">
       <h2 className="text-lg font-semibold mb-2 text-center">Citas Pendientes por atender</h2>
       <ul className="flex justify-center">
-        {citasPendientes.length === 0 ? ( 
+        {citasPendientes.length === 0 ? (
           <li>
             <p>No hay citas pendientes por atender.</p>
           </li>
@@ -49,7 +49,7 @@ function DocCitasPend() {
                 <span className="block">Paciente: {cita.cedulaPaciente}</span>
                 <span className="block">Estado: {cita.estado}</span>
                 <span className="block">Motivo: {cita.motivo}</span>
-                <Link to={`/atenderCita/${cita.id}`}> {/* Modifica aquí */}
+                <Link to={`/atenderCita/${cita.id}/${cita.cedulaPaciente}`}>
                   <button className="bg-blue-500 hover.bg-blue-600 text-white font-bold py-2 px-4 rounded mt-2">
                     Atender Cita
                   </button>

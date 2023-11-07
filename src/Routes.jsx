@@ -15,7 +15,6 @@ import CreateMedico from './pages/admin/CreateMedico';
 import PqrsAdmin from './pages/admin/PqrsAdmin';
 import HistorialConsultasMed from './pages/admin/HistorialConsultasMed';
 import CrudMed from './pages/admin/CrudMed';
-import InformacionPaciente from './pages/patient/InformacionPaciente';
 import HomeDoctor from './pages/doctor/HomeDoctor';
 import AtenderCita from './pages/doctor/AtenderCita';
 import NotFoundPage from './pages/NotFoundPage';
@@ -33,14 +32,14 @@ const AppRoutes = () => {
   useEffect(() => {
     // Obtener el tipo de usuario almacenado en localStorage
     const storedUserType = localStorage.getItem('userType');
-  
+
     // Actualizar el estado con el tipo de usuario
     setUserTypeState(storedUserType);
   }, []);
-  
+
   console.log(localStorage.getItem(''));
   return (
-    
+
     <Router>
 
       {/* Renderizar el Navbar según el tipo de usuario o Navbar por defecto */}
@@ -55,13 +54,12 @@ const AppRoutes = () => {
           <Route path="/" element={<HomePatient />} />
           <Route path="/historialMedico" element={<HistorialMedico />} />
           <Route path="/pqrs" element={<Pqrs />} />
-          <Route path="/informacionPaciente" element={<InformacionPaciente />} />
           <Route path="*" element={<Navigate to="/notFoundPage" />} />
         </Routes>
       ) : userTypeState === 'medico' ? (
         <Routes>
           <Route path="/" element={<HomeDoctor />} />
-          <Route path="/atenderCita/:citaId" element={<AtenderCita />} />
+          <Route path="/atenderCita/:citaId/:cedulaPaciente" element={<AtenderCita />} />
           <Route path="*" element={<Navigate to="/notFoundPage" />} />
         </Routes>
       ) : userTypeState === 'admin' ? (
@@ -81,9 +79,9 @@ const AppRoutes = () => {
           <Route path="/maintenancePage" element={<MaintenancePage />} />
           <Route path="/notFoundPage" element={<NotFoundPage />} />
           <Route path="/maintenance" element={redirectToMaintenance} />
-          
+
           {/* Redirección a NotFoundPage en caso de no encontrar la página */}
-          <Route path="*" element={<NotFoundPage />} />   
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       )}
 

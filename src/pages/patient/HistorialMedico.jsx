@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { obtenerAtencionesPorPaciente } from '../../services/atencionesService'; // Importa tu función para obtener atenciones por paciente
+import { obtenerAtencionesPorPaciente } from '../../services/atencionesService';
 
 function HistorialMedico() {
   const [atenciones, setAtenciones] = useState([]);
   const user = JSON.parse(localStorage.getItem('userData')) || null;
-  const cedulaPaciente = user.userData[0][0].cedula; // Utiliza la cédula del paciente desde el 
+  const cedulaPaciente = user.userData[0][0].cedula;
 
   useEffect(() => {
-    // Realiza la solicitud para obtener las atenciones por paciente
     obtenerAtencionesPorPaciente(cedulaPaciente)
       .then((data) => {
         setAtenciones(data);

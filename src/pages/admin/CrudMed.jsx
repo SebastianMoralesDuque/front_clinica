@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import swal from 'sweetalert';
-import AssignScheduleModal from '../../components/admin/AssignScheduleModal';// Ajusta la ruta según tu estructura de archivos
+import AssignScheduleModal from '../../components/admin/AssignScheduleModal'; // Ajusta la ruta según tu estructura de archivos
 
 function CrudMed() {
     const [medicoData, setMedicoData] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedCedula, setSelectedCedula] = useState(null);
+    const [detallesAEditar, setDetallesAEditar] = useState({
+        email: '',
+        telefono: '',
+        cedula: '',
+    });
 
     useEffect(() => {
         fetchData();
@@ -26,83 +31,61 @@ function CrudMed() {
         }
     };
 
-    const handleEdit = (cedula) => {
-        console.log(`Editar médico con cédula: ${cedula}`);
-    };
-
-    const handleDelete = async (cedula, especialidad, pacienteData) => {
-        try {
-            // Eliminar médico
-            const medicoResponse = await fetch('http://localhost:9009/medicos/eliminar', {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ cedula_usuario: cedula, especializacion: especialidad }),
-            });
-
-            // Verificar si se eliminó el medico con éxito
-            if (medicoResponse.ok) {
-
-                // Crear objeto con datos del medico
-                const usuarioEliminar = {
-                    cedula: pacienteData.cedula,
-                    nombre: pacienteData.nombre,
-                    contrasena: pacienteData.contrasena,
-                    email: pacienteData.email,
-                    telefono: pacienteData.telefono,
-                    ciudad: pacienteData.ciudad,
-                };
-
-                // Eliminar usuario asociado
-                const usuarioResponse = await fetch('http://localhost:9009/usuarios/gestion', {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(usuarioEliminar),
-                });
-
-                // Verificar si se eliminó el usuario con éxito
-                if (usuarioResponse.ok) {
-
-                    // Muestra la notificación con SweetAlert
-                    swal('¡Éxito!', 'Médico eliminado exitosamente', 'success');
-
-                    // Vuelve a cargar los datos de la tabla después de la eliminación
-                    fetchData();
-                } else {
-                    // Error al eliminar el usuario
-                    console.error('Error al eliminar el Medico');
-
-                    // Muestra la notificación de error con SweetAlert
-                    swal('Error', 'Hubo un problema al eliminar el Medico', 'error');
-                }
-            } else {
-                // Error al eliminar el médico
-                console.error('Error al eliminar el médico');
-
-                // Muestra la notificación de error con SweetAlert
-                swal('Error', 'Hubo un problema al eliminar el médico', 'error');
-            }
-        } catch (error) {
-            // Error en la solicitud
-            console.error('Error en la solicitud:', error);
-
-            // Muestra la notificación de error con SweetAlert
-            swal('Error', 'Hubo un problema al comunicarse con el servidor', 'error');
-        }
-    };
-
-
-    const handleAssignSchedule = (cedula) => {
-        setSelectedCedula(cedula);
+    const handleEdit = (cedula, email, telefono) => {
+        setDetallesAEditar({ cedula, email, telefono });
         setIsModalOpen(true);
+    };
+
+    const handleEditSubmit = async () => {
+        try {
+          // Primero, obtenemos los valores de email, telefono y cedula desde detallesAEditar
+          const { email, telefono, cedula } = detallesAEditar;
+      
+          // Luego, creamos un objeto con los datos a editar
+          const datosAEditar = {
+            email,
+            telefono,
+            cedula,
+          };
+      
+          const usuarioResponse = await fetch('http://localhost:9009/usuarios/gestion/editarUsuario', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(datosAEditar),
+          });
+      
+          if (usuarioResponse.ok) {
+            // Muestra un mensaje de éxito con SweetAlert
+            swal({
+              title: 'Éxito',
+              text: 'Cambios guardados con éxito',
+              icon: 'success',
+              timer: 1400,
+              button: false,
+            }).then(() => {
+              // Cierra el modal
+              
+              closeModal();
+              window.location.href = '/crudmed';
+
+      
+              // Puedes realizar cualquier acción adicional aquí si es necesario
+            });
+          } else {
+            swal('Error', 'Hubo un problema al guardar los cambios. Por favor, inténtalo de nuevo.', 'error');
+          }
+        } catch (error) {
+          console.error('Error:', error.message);
+          swal('Error', 'Hubo un problema al comunicarse con el servidor', 'error');
+        }
       };
-    
-      const closeModal = () => {
+      
+
+    const closeModal = () => {
         setIsModalOpen(false);
-      };
+    };
 
     return (
         <div className="p-8">
@@ -117,7 +100,6 @@ function CrudMed() {
                     Registrar Médico
                 </Link>
             </div>
-
 
             <table className="min-w-full bg-white border border-gray-300">
                 <thead>
@@ -147,9 +129,8 @@ function CrudMed() {
                             <td className="border border-gray-300 px-4 py-2">{medico[2]}</td>
                             <td className="text-center">
                                 <div className="mx-auto">
-
                                     <button
-                                        onClick={() => handleEdit(medico[0].cedula)}
+                                        onClick={() => handleEdit(medico[0].cedula, medico[0].email, medico[0].telefono)}
                                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
                                     >
                                         Editar
@@ -174,18 +155,77 @@ function CrudMed() {
                                         Asignar Horario
                                     </button>
                                 </div>
-
                             </td>
                         </tr>
-
                     ))}
                 </tbody>
             </table>
-              {/* Renderizar el modal si está abierto */}
-      {isModalOpen && (
-        <AssignScheduleModal cedula={selectedCedula} closeModal={closeModal} />
-      )}
-    </div>
+
+            {/* Renderizar el modal si está abierto */}
+            {isModalOpen && (
+                <div className="fixed inset-0 flex items-center justify-center z-50">
+                    <div className="modal-container">
+                        <div className="bg-white rounded shadow-lg w-1/2 mx-auto">
+                            <div className="modal-content py-4 text-left px-6">
+                                <h2 className="text-2xl mb-6">Editar Médico</h2>
+
+                                <form>
+                                    <div className="mb-4">
+                                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+                                            Email
+                                        </label>
+                                        <input
+                                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            id="email"
+                                            type="email"
+                                            placeholder="Email"
+                                            value={detallesAEditar.email}
+                                            onChange={(e) => setDetallesAEditar({ ...detallesAEditar, email: e.target.value })}
+                                        />
+                                    </div>
+
+                                    <div className="mb-4">
+                                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="telefono">
+                                            Teléfono
+                                        </label>
+                                        <input
+                                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            id="telefono"
+                                            type="text"
+                                            placeholder="Teléfono"
+                                            value={detallesAEditar.telefono}
+                                            onChange={(e) => setDetallesAEditar({ ...detallesAEditar, telefono: e.target.value })}
+                                        />
+                                    </div>
+
+                                    <div className="text-right">
+                                        <button
+                                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                            onClick={(e) => {
+                                                e.preventDefault(); // Prevenir la recarga de la página
+                                                handleEditSubmit();
+                                            }}
+                                        >
+                                            Guardar Cambios
+                                        </button>
+
+                                    </div>
+                                </form>
+
+                                <div className="text-right mt-4">
+                                    <button
+                                        onClick={closeModal}
+                                        className="bg-gray-500 text-white px-4 py-2 rounded"
+                                    >
+                                        Cerrar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
     );
 }
 

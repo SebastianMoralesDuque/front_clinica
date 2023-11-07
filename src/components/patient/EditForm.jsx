@@ -1,6 +1,5 @@
 import swal from 'sweetalert';
 import React, { useState, useEffect } from 'react';
-import userRegisterService from '../../services/userRegisterService';
 import obtenerEps from '../../services/epsService';
 
 const EditForm = ({ detallesAEditar, handleFieldChange, handleGoBack }) => {
@@ -20,137 +19,149 @@ const EditForm = ({ detallesAEditar, handleFieldChange, handleGoBack }) => {
     fetchEps();
   }, []); // Se ejecutará una vez al montar el componente
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    handleFieldChange('url_foto', file);
-  };
-
   const handleSaveChanges = async () => {
     try {
-      let imageUrl = '';
-
-      if (detallesAEditar.url_foto) {
-        const formData = new FormData();
-        formData.append('fotoPerfil', detallesAEditar.url_foto);
-
-        imageUrl = await userRegisterService.uploadPhotoToCloudinary(formData, detallesAEditar.cedula);
-        console.log('Foto cargada en Cloudinary con éxito:', imageUrl);
-      }
-
-      const { email, telefono, alergias, cedula } = detallesAEditar;
+      const { email, telefono, alergias, cedula, fecha_nacimiento, tipo_sangre } = detallesAEditar;
       const eps = selectedEps || detallesAEditar.eps; // Utiliza la EPS seleccionada o la existente
 
-      const response = await fetch('http://localhost:9009/usuarios/gestion/editarPaciente', {
+      // Actualiza el usuario
+      const usuarioResponse = await fetch('http://localhost:9009/usuarios/gestion/editarUsuario', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, telefono, url_foto: imageUrl, alergias, eps, cedula }), // Agregamos cedula al cuerpo
+        body: JSON.stringify({ email, telefono, cedula }),
       });
 
-      if (response.ok) {
-        // Mostrar swal en caso de éxito
-        swal('Éxito', 'Paciente editado con éxito', 'success', {
-          icon: 'success',
-          timer: 2000, // Cerrar automáticamente el alerta después de 2 segundos
-        }).then(() => {
-          window.location.href = '/';
+      if (usuarioResponse.ok) {
+        // Actualiza el paciente
+        const pacienteResponse = await fetch(`http://localhost:9009/usuarios/gestion/pacientes/${cedula}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ fecha_nacimiento, alergias, eps, tipo_sangre, cedula }), // Incluye la cédula para edición
         });
 
-        // Puedes redirigir o realizar otras acciones según tus necesidades
+        if (pacienteResponse.ok) {
+          // Muestra un mensaje de éxito con SweetAlert
+          swal({
+            title: 'Éxito',
+            text: 'Paciente editado con éxito',
+            icon: 'success',
+            timer: 2000, // Cierra automáticamente el mensaje después de 2 segundos
+            button: false,
+          }).then(() => {
+            // Después de 2 segundos, cierra la sesión y redirige al usuario a la página principal
+            swal.close(); // Cierra el mensaje de éxito
+            localStorage.removeItem('userType');
+            localStorage.removeItem('userData');
+            window.location.href = '/';
+          });
+        } else {
+          // Muestra un mensaje de error con SweetAlert en caso de error en la actualización del paciente
+          swal('Error', 'Hubo un error al editar el paciente. Por favor, inténtalo de nuevo.', 'error');
+        }
       } else {
-        // Mostrar swal en caso de error
-        swal('Error', 'Hubo un error al editar el paciente. Por favor, inténtalo de nuevo.', 'error');
+        // Muestra un mensaje de error con SweetAlert en caso de error en la actualización del usuario
+        swal('Error', 'Hubo un error al editar el usuario. Por favor, inténtalo de nuevo.', 'error');
       }
     } catch (error) {
       console.error('Error al editar el paciente:', error);
     }
   };
 
+
   return (
     <div>
-<form className="mt-4">
-  <div className="grid grid-cols-2 gap-4">
-    <div>
-      <div className="mb-4">
-        <label className="block text-gray-800">Subir Foto</label>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-          className="w-full border p-2 rounded-md"
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-800">Cédula</label>
-        <input
-          type="text"
-          value={detallesAEditar.cedula}
-          disabled
-          className="w-full border p-2 rounded-md"
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-800">Email</label>
-        <input
-          type="text"
-          value={detallesAEditar.email}
-          onChange={(e) => handleFieldChange('email', e.target.value)}
-          className="w-full border p-2 rounded-md"
-        />
-      </div>
-    </div>
-    <div>
-      <div className="mb-4">
-        <label className="block text-gray-800">Teléfono</label>
-        <input
-          type="text"
-          value={detallesAEditar.telefono}
-          onChange={(e) => handleFieldChange('telefono', e.target.value)}
-          className="w-full border p-2 rounded-md"
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-800">Alergias</label>
-        <input
-          type="text"
-          value={detallesAEditar.alergias}
-          onChange={(e) => handleFieldChange('alergias', e.target.value)}
-          className="w-full border p-2 rounded-md"
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-800">EPS</label>
-        <select
-          value={selectedEps}
-          onChange={(e) => setSelectedEps(e.target.value)}
-          className="w-full border p-2 rounded-md"
-        >
-          <option key="" value="" disabled>
-            Seleccione EPS
-          </option>
-          {epsOptions.map((eps, index) => (
-            <option key={index} value={eps.nombre}>
-              {eps.nombre}
-            </option>
-          ))}
-        </select>
-      </div>
-    </div>
-    <button
-      type="button"
-      onClick={handleSaveChanges}
-      className="bg-blue-500 text-white px-4 py-2 hover:bg-blue-600"
-    >
-      Guardar Cambios
-    </button>
-    <button onClick={handleGoBack} className="bg-gray-500 text-white px-4 py-2 hover:bg-gray-600">
-      Regresar
-    </button>
-  </div>
+      <form className="mt-4">
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <div className="mb-4">
+              <label className="block text-gray-800">Cédula</label>
+              <input
+                type="text"
+                value={detallesAEditar.cedula}
+                onChange={(e) => handleFieldChange('cedula', e.target.value)}
+                disabled
+                className="w-full border p-2 rounded-md"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-800">Email</label>
+              <input
+                type="text"
+                value={detallesAEditar.email}
+                onChange={(e) => handleFieldChange('email', e.target.value)}
+                className="w-full border p-2 rounded-md"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-800">Fecha de Nacimiento</label>
+              <input
+                type="date"
+                value={detallesAEditar.fecha_nacimiento}
+                onChange={(e) => handleFieldChange('fecha_nacimiento', e.target.value)}
+                className="w-full border p-2 rounded-md"
+              />
+            </div>
+          </div>
+          <div>
+            <div className="mb-4">
+              <label className="block text-gray-800">Teléfono</label>
+              <input
+                type="text"
+                value={detallesAEditar.telefono}
+                onChange={(e) => handleFieldChange('telefono', e.target.value)}
+                className="w-full border p-2 rounded-md"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-800">Alergias</label>
+              <input
+                type="text"
+                value={detallesAEditar.alergias}
+                onChange={(e) => handleFieldChange('alergias', e.target.value)}
+                className="w-full border p-2 rounded-md"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-800">Tipo de Sangre</label>
+              <select
+                value={detallesAEditar.tipo_sangre}
+                onChange={(e) => handleFieldChange('tipo_sangre', e.target.value)}
+                className="w-full border p-2 rounded-md"
+              >
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <button
+            onClick={handleGoBack}
+            className="w-full bg-gray-500 text-white px-4 py-2 hover:bg-gray-600"
+          >
+            Regresar
+          </button>
+          <button
+            type="button"
+            onClick={handleSaveChanges}
+            className="w-full bg-blue-500 text-white px-4 py-2 hover:bg-blue-600"
+          >
+            Guardar Cambios
+          </button>
 
-</form>
+        </div>
 
+      </form>
     </div>
   );
 };
