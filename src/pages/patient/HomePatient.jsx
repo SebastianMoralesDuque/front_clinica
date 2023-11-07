@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Pagination from '../../components/patient/Pagination';
 import { citasPendientes, citasAnteriores } from './Data';
 import AgendarCitaModal from '../../components/patient/AgendarCitaModal';
 import PqrModal from '../../components/patient/PqrModal'; // Importa el nuevo componente
 import 'react-datepicker/dist/react-datepicker.css';
+import { obtenerCitasProximas, obtenerCitasAnteriores } from '../../services/citasService';
 
 function HomePatient() {
   const nombrePaciente = "Sebastian Morales";
@@ -108,6 +109,35 @@ function HomePatient() {
 
   const user = JSON.parse(localStorage.getItem('userData')) || null;
 
+    // Estado para almacenar las citas próximas
+    const [citasProximas, setCitasProximas] = useState([]);
+    const [citasAnteriores, setCitasAnteriores] = useState([]);
+
+    // Función para obtener las citas próximas
+    const fetchCitasProximas = async () => {
+      try {
+        const citas = await obtenerCitasProximas(); // Llama al servicio para obtener las citas próximas
+        setCitasProximas(citas);
+      } catch (error) {
+        console.error('Error al obtener las citas próximas:', error);
+      }
+    };
+    const fetchCitasAnteriores= async () => {
+      try {
+        const citas = await obtenerCitasAnteriores(); // Llama al servicio para obtener las citas próximas
+        setCitasAnteriores(citas);
+      } catch (error) {
+        console.error('Error al obtener las citas próximas:', error);
+      }
+    };
+    
+    // Llama a la función para obtener las citas próximas cuando el componente se monta
+    useEffect(() => {
+      fetchCitasProximas();
+      fetchCitasAnteriores();
+    }, []);
+
+    
   return (
     <div className="container mx-auto p-4">
       <div className="mb-4">
@@ -134,27 +164,36 @@ function HomePatient() {
         <h2 className="text-lg font-semibold mb-2 text-center">Citas Pendientes</h2>
       </div>
       <div className="bg-blue-100 p-4 rounded shadow mb-4 overflow-x-auto">
-        <ul className="flex justify-center">
-          {paginarCitasPendientes(citasPendientes).map((cita) => (
-            <li key={cita.id} className="mr-4">
-              <div className="bg-white p-4 rounded shadow">
-                <strong>ID: {cita.id}</strong><br />
-                <span className="block">Fecha de Creación: {cita.fechaCreacion}</span>
-                <span className="block">Fecha de Cita: {cita.fechaCita}</span>
-                <span className="block">Médico: {cita.medico}</span>
-                <span className="block">Paciente: {cita.paciente}</span>
-                <span className="block">Estado: {cita.estado}</span>
-                <span className="block">Motivo: {cita.motivo}</span>
-              </div>
-            </li>
-          ))}
-        </ul>
-        <hr />
-      </div>
-      <Pagination
-        pageCount={Math.ceil(citasPendientes.length / elementosPorPagina)}
-        onPageChange={cambiarPaginaPendientes}
-      />
+      <ul className="flex justify-center">
+        {paginarCitasPendientes(citasProximas).map((cita) => (
+          <li key={cita.id} className="mr-4">
+            <div className="bg-white p-4 rounded shadow">
+              <strong>ID: {cita.id}</strong><br />
+              <span className="block">Fecha de Creación: {cita.fechaCreacion}</span>
+              <span className="block">Fecha de Cita: {cita.fechaCita}</span>
+              <span className="block">Médico: {cita.cedulaMedico}</span>
+              <span className="block">Paciente: {cita.cedulaPaciente}</span>
+              <span className="block">Estado: {cita.estado}</span>
+              <span className="block">Motivo: {cita.motivo}</span>
+
+              {/* Botón para cancelar la cita */}
+              <button
+                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded mt-2"
+                onClick={() => cancelarCita(cita.id)} // Llama a tu función para cancelar la cita
+              >
+                Cancelar Cita
+              </button>
+            </div>
+          </li>
+        ))}
+      </ul>
+      <hr />
+    </div>
+    <Pagination
+      pageCount={Math.ceil(citasProximas.length / elementosPorPagina)}
+      onPageChange={cambiarPaginaPendientes}
+    />
+
 
       <div className="text-center mt-4">
         <hr className="border-t-2 border-gray-300" />
@@ -164,33 +203,34 @@ function HomePatient() {
         <h2 className="text-lg font-semibold mb-2 text-center">Citas Anteriores</h2>
       </div>
       <div className="bg-blue-100 p-4 rounded shadow mb-4 overflow-x-auto">
-        <ul className="flex justify-center">
-          {paginarCitasAnteriores(citasAnteriores).map((cita) => (
-            <li key={cita.id} className="mr-4">
-              <div className="bg-white p-4 rounded shadow">
-                <strong>ID: {cita.id}</strong><br />
-                <span className="block">Fecha de Creación: {cita.fechaCreacion}</span>
-                <span className="block">Fecha de Cita: {cita.fechaCita}</span>
-                <span className="block">Médico: {cita.medico}</span>
-                <span className="block">Paciente: {cita.paciente}</span>
-                <span className="block">Estado: {cita.estado}</span>
-                <span className="block">Motivo: {cita.motivo}</span>
-                <button
-                  className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mt-2"
-                  onClick={() => handleGenerarPQRClick(cita.id)}
-                >
-                  Generar PQR
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
-        <hr />
-      </div>
-      <Pagination
-        pageCount={Math.ceil(citasAnteriores.length / elementosPorPagina)}
-        onPageChange={cambiarPaginaAnteriores}
-      />
+  <ul className="flex justify-center">
+    {paginarCitasAnteriores(citasAnteriores).map((cita) => (
+      <li key={cita.id} className="mr-4">
+        <div className="bg-white p-4 rounded shadow">
+          <strong>ID: {cita.id}</strong><br />
+          <span className="block">Fecha de Creación: {cita.fechaCreacion}</span>
+          <span className="block">Fecha de Cita: {cita.fechaCita}</span>
+          <span className="block">Médico: {cita.cedulaMedico}</span>
+          <span className="block">Paciente: {cita.cedulaPaciente}</span>
+          <span className="block">Estado: {cita.estado}</span>
+          <span className="block">Motivo: {cita.motivo}</span>
+          <button
+            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mt-2"
+            onClick={() => handleGenerarPQRClick(cita.id)}
+          >
+            Generar PQR
+          </button>
+        </div>
+      </li>
+    ))}
+  </ul>
+  <hr />
+</div>
+<Pagination
+  pageCount={Math.ceil(citasAnteriores.length / elementosPorPagina)}
+  onPageChange={cambiarPaginaAnteriores}
+/>
+
 
       <AgendarCitaModal
         modalVisible={modalVisible}

@@ -61,7 +61,7 @@ const AppRoutes = () => {
       ) : userTypeState === 'medico' ? (
         <Routes>
           <Route path="/" element={<HomeDoctor />} />
-          <Route path="/atenderCita" element={<AtenderCita />} />
+          <Route path="/atenderCita/:citaId" element={<AtenderCita />} />
           <Route path="*" element={<Navigate to="/notFoundPage" />} />
         </Routes>
       ) : userTypeState === 'admin' ? (

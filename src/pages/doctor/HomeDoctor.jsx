@@ -10,10 +10,7 @@ function HomeDoctor() {
   const [doctorData, setDoctorData] = useState(null);
 
   useEffect(() => {
-    // Obtén la información del médico desde el localStorage al cargar el componente
     const storedData = JSON.parse(localStorage.getItem('medicoData'));
-
-    // Verifica si hay datos de médico
     if (storedData && storedData.userData && storedData.userData[0][1]) {
       setDoctorData(storedData);
     }
@@ -47,12 +44,6 @@ function HomeDoctor() {
           <h1 className="text-3xl font-bold">{`Bienvenido, Dr. ${doctorData.userData[0][0].nombre}`}</h1>
         )}
         <div className="flex space-x-4">
-          <button
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-full focus:outline-none focus:ring focus:border-blue-700"
-            onClick={openCitasPendientesModal}
-          >
-            Agenda
-          </button>
           <button
             className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-full focus:outline-none focus:ring focus:border-blue-700"
             onClick={openModal}
