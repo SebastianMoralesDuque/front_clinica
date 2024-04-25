@@ -56,25 +56,13 @@ const EditarInformacionModal = ({ isOpen, closeModal, userData2, handleEdit }) =
             </td>
           </tr>
           <tr>
-            <td className="border px-4 py-2">EPS</td>
+            <td className="border px-4 py-2">Sucursal</td>
             <td className="border px-4 py-2">
               <input
                 className="w-full border rounded p-2"
                 type="text"
                 name="eps"
                 value={editedData.eps}
-                onChange={handleChange}
-              />
-            </td>
-          </tr>
-          <tr>
-            <td className="border px-4 py-2">Tipo de Sangre</td>
-            <td className="border px-4 py-2">
-              <input
-                className="w-full border rounded p-2"
-                type="text"
-                name="tipo_sangre"
-                value={editedData.tipo_sangre}
                 onChange={handleChange}
               />
             </td>

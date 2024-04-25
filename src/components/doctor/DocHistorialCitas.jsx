@@ -42,9 +42,9 @@ function DocHistorialCitas() {
           <li key={cita.idAtencion} className="mr-4">
             <div className="bg-white p-4 rounded shadow">
               <strong>ID: {cita.idAtencion}</strong><br />
-              <span className="block">Síntomas: {cita.sintomas}</span>
-              <span className="block">Diagnóstico: {cita.diagnostico}</span>
-              <span className="block">Notas Médicas: {cita.notasMedicas}</span>
+              <span className="block">Objetivos: {cita.sintomas}</span>
+              <span className="block">Observaciones: {cita.diagnostico}</span>
+              <span className="block">Notas Cosméticas: {cita.notasMedicas}</span>
               <span className="block">Tratamiento: {cita.tratamiento}</span>
             </div>
           </li>

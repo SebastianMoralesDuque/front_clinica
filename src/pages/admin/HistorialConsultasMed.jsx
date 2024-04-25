@@ -5,7 +5,7 @@ function HistorialConsultasMed() {
         id: index + 1,
         fecha: `2023-09-${(index % 30) + 1}`.padStart(10, '0'),
         paciente: `Paciente ${index + 1}`,
-        medico: `Dr. Médico ${index % 10 + 1}`
+        medico: `Dr. Trabajador ${index % 10 + 1}`
     }));
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -35,8 +35,8 @@ function HistorialConsultasMed() {
                         <tr>
                             <th className="py-2 px-4 border-b border-gray-300 text-center">N°</th>
                             <th className="py-2 px-4 border-b border-gray-300">Fecha de Atención</th>
-                            <th className="py-2 px-4 border-b border-gray-300">Paciente</th>
-                            <th className="py-2 px-4 border-b border-gray-300">Médico</th>
+                            <th className="py-2 px-4 border-b border-gray-300">Cliente</th>
+                            <th className="py-2 px-4 border-b border-gray-300">Trabajador</th>
                         </tr>
                     </thead>
                     <tbody>

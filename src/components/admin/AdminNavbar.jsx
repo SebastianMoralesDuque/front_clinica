@@ -30,7 +30,7 @@ const Navbar = () => {
     <nav className="bg-gray-800 py-4 px-6 flex justify-between items-center">
       <div>
         <Link to="/" className="text-white text-2xl font-semibold">
-          Clínica San Gabriel
+          Cosmetica Coco Pink
         </Link>
       </div>
       <ul className="flex space-x-4 items-center">

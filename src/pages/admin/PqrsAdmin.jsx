@@ -17,7 +17,7 @@ function PqrsAdmin() {
             paciente: 'María Rodríguez',
             consultaFecha: '2023-09-15',
             detalleConsulta: 'Consulta sobre alergias.',
-            detallePQRS: 'El médico no revisó mi historial de alergias.',
+            detallePQRS: 'El Trabajador no revisó mi historial de alergias.',
             estado: 'enProceso',
             fechaCreacion: '2023-09-16'
         },
@@ -45,9 +45,9 @@ function PqrsAdmin() {
                     <thead>
                         <tr>
                             <th className="border px-4 py-2">ID</th>
-                            <th className="border px-4 py-2">Paciente</th>
-                            <th className="border px-4 py-2">Fecha Consulta</th>
-                            <th className="border px-4 py-2">Detalle Consulta</th>
+                            <th className="border px-4 py-2">Cliente</th>
+                            <th className="border px-4 py-2">Fecha Atencion</th>
+                            <th className="border px-4 py-2">Detalle Atencion</th>
                             <th className="border px-4 py-2">Detalle PQRS</th>
                             <th className="border px-4 py-2">Fecha Creación PQRS</th>
                             <th className="border px-4 py-2">Estado</th>

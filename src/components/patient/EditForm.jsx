@@ -125,23 +125,6 @@ const EditForm = ({ detallesAEditar, handleFieldChange, handleGoBack }) => {
                 className="w-full border p-2 rounded-md"
               />
             </div>
-            <div className="mb-4">
-              <label className="block text-gray-800">Tipo de Sangre</label>
-              <select
-                value={detallesAEditar.tipo_sangre}
-                onChange={(e) => handleFieldChange('tipo_sangre', e.target.value)}
-                className="w-full border p-2 rounded-md"
-              >
-                <option value="A+">A+</option>
-                <option value="A-">A-</option>
-                <option value="B+">B+</option>
-                <option value="B-">B-</option>
-                <option value="AB+">AB+</option>
-                <option value="AB-">AB-</option>
-                <option value="O+">O+</option>
-                <option value="O-">O-</option>
-              </select>
-            </div>
           </div>
         </div>
         <div className="grid grid-cols-2 gap-4">

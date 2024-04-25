@@ -95,10 +95,10 @@ const DoctorNavbar = () => {
           }
         } else {
           // Error deleting the doctor
-          console.error('Error al eliminar el médico');
+          console.error('Error al eliminar el Trabajador');
   
           // Show an error message with SweetAlert
-          swal('Error', 'Hubo un problema al eliminar el médico', 'error');
+          swal('Error', 'Hubo un problema al eliminar el Trabajador', 'error');
         }
       }
     } catch (error) {
@@ -173,7 +173,7 @@ const DoctorNavbar = () => {
     <nav className="bg-gray-800 py-4 px-6 flex justify-between items-center">
       <div>
         <Link to="/" className="text-white text-2xl font-semibold">
-          Clínica San Gabriel
+          Cosmetica Coco Pink
         </Link>
       </div>
       <ul className="flex space-x-4 items-center">

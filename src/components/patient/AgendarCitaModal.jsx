@@ -48,7 +48,7 @@ const AgendarCitaModal = ({ modalVisible, closeModal, handleAgendarCita }) => {
         const data = await response.json();
         setMedicosDisponibles({ [especializacionSeleccionada]: data });
       } else {
-        console.error('Error al obtener médicos por especialización:', response.status);
+        console.error('Error al obtener Trabajadors por especialización:', response.status);
       }
     } catch (error) {
       console.error('Error de red:', error);
@@ -213,7 +213,7 @@ const AgendarCitaModal = ({ modalVisible, closeModal, handleAgendarCita }) => {
             {formularioCita.especializacion && (
               <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2">
-                  Médico:
+                  Trabajador:
                 </label>
                 <select
                   name="medico"
@@ -221,7 +221,7 @@ const AgendarCitaModal = ({ modalVisible, closeModal, handleAgendarCita }) => {
                   onChange={handleFormularioChange}
                   value={formularioCita.medico}
                 >
-                  <option value="">Seleccionar Médico</option>
+                  <option value="">Seleccionar Trabajador</option>
                   {medicosDisponibles[formularioCita.especializacion]?.map((medico) => (
                     <option key={medico[0]} value={medico[0]}>
                       {medico[0].nombre}
@@ -265,7 +265,7 @@ const AgendarCitaModal = ({ modalVisible, closeModal, handleAgendarCita }) => {
             )}
             <div className="mb-6">
               <label className="block text-gray-700 text-sm font-bold mb-2">
-                Motivo para Consulta:
+                Motivo para Cita:
               </label>
               <textarea
                 name="motivo"

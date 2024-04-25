@@ -6,9 +6,9 @@ function PqrModal({ citaId, closeModal }) {
   const cita = {
     id: citaId,
     atencion: 'Atención de la cita número 1',
-    diagnostico: 'Diagnóstico de la cita',
+    diagnostico: 'Observaciones de la cita',
     tratamiento: 'Tratamiento de la cita',
-    notasMedicas: 'Notas médicas de la cita',
+    notasMedicas: 'Notas Cosméticas de la cita',
   };
 
   // Función para generar PQR (aquí puedes agregar tu lógica)
@@ -39,7 +39,7 @@ function PqrModal({ citaId, closeModal }) {
           <div className="border border-gray-300 rounded py-2 px-3">{cita.atencion}</div>
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Diagnóstico:</label>
+          <label className="block text-gray-700 text-sm font-bold mb-2">Observaciones:</label>
           <div className="border border-gray-300 rounded py-2 px-3">{cita.diagnostico}</div>
         </div>
         <div className="mb-4">
@@ -47,7 +47,7 @@ function PqrModal({ citaId, closeModal }) {
           <div className="border border-gray-300 rounded py-2 px-3">{cita.tratamiento}</div>
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Notas Médicas:</label>
+          <label className="block text-gray-700 text-sm font-bold mb-2">Notas Cosméticas:</label>
           <div className="border border-gray-300 rounded py-2 px-3">{cita.notasMedicas}</div>
         </div>
         <div className="mb-4">

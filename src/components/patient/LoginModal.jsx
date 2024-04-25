@@ -110,7 +110,7 @@ const LoginModal = ({ closeModal }) => {
 
   const handleSubmitDoctor = async (e) => {
     e.preventDefault();
-    console.log('Formulario enviado con datos de médico:', formDataDoctor);
+    console.log('Formulario enviado con datos de Trabajador:', formDataDoctor);
 
     const loginSuccess = await UserService.loginDoctor(formDataDoctor);
     if (loginSuccess) {
@@ -195,7 +195,7 @@ const LoginModal = ({ closeModal }) => {
                   }`}
                 onClick={() => handleLoginTypeChange('medico')}
               >
-                Médico
+                Trabajador
               </div>
               <div
                 className={`cursor-pointer px-4 py-2 rounded-t-lg transition duration-300 ease-in-out ${loginType === 'admin' ? 'border-b-2 border-blue-800' : 'border-b border-transparent'
@@ -257,7 +257,7 @@ const LoginModal = ({ closeModal }) => {
               </>
             ) : loginType === 'medico' ? (
               <>
-                <h2 className="text-2xl font-semibold text-center mb-4">Inicio Sesión Médico</h2>
+                <h2 className="text-2xl font-semibold text-center mb-4">Inicio Sesión Trabajador</h2>
                 <form onSubmit={handleSubmitDoctor} className="space-y-4">
                   <div className="mb-4">
                     <label htmlFor="codigoMedico" className="block text-gray-800 font-medium">Cédula:</label>

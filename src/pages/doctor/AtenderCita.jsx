@@ -105,17 +105,17 @@ function AtenderCita() {
                 ⇦
               </Link>
 
-              {/* Botón para mostrar el historial médico (derecha) */}
+              {/* Botón para mostrar el historial Trabajador (derecha) */}
               <button
                 onClick={() => setIsModalOpen(true)}
                 className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
               >
-                Mostrar Historial Médico del Paciente
+                Mostrar Historial del Cliente
               </button>
             </div>
           </div>
           <label className="block text-gray-700 text-sm font-bold mb-2">
-            Diagnóstico
+          Observaciones
           </label>
           <textarea
             className="border rounded w-full py-2 px-3"
@@ -135,7 +135,7 @@ function AtenderCita() {
           ></textarea>
 
           <label className="block text-gray-700 text-sm font-bold mt-4 mb-2">
-            Síntomas
+            Objetivos
           </label>
           <textarea
             className="border rounded w-full py-2 px-3"
@@ -145,7 +145,7 @@ function AtenderCita() {
           ></textarea>
 
           <label className="block text-gray-700 text-sm font-bold mt-4 mb-2">
-            Notas Médicas
+           Notas Cosméticas:
           </label>
           <textarea
             className="border rounded w-full py-2 px-3"
@@ -175,16 +175,16 @@ function AtenderCita() {
             className="bg-white p-4 rounded-lg shadow-md w-2/3"
             onClick={(e) => e.stopPropagation()} // Evita que se cierre al hacer clic dentro del modal
           >
-            <h2 className="text-2xl font-bold mb-4">Historial Médico del Paciente</h2>
+            <h2 className="text-2xl font-bold mb-4">Historial Trabajador del Paciente</h2>
             <div className="p-4"> {/* Nuevo div para separar la tabla y el botón */}
               <table className="w-full">
                 <thead>
                   <tr>
                     <th className="border p-2">ID Atención</th>
                     <th className="border p-2">ID Cita</th>
-                    <th className="border p-2">Síntomas</th>
-                    <th className="border p-2">Diagnóstico</th>
-                    <th className="border p-2">Notas Médicas</th>
+                    <th className="border p-2">Objetivos</th>
+                    <th className="border p-2">Observaciones</th>
+                    <th className="border p-2">Notas Cosméticas</th>
                     <th className="border p-2">Tratamiento</th>
                   </tr>
                 </thead>

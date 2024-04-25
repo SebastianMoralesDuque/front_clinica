@@ -25,7 +25,7 @@ const CitasPendientesModal = ({ isOpen, onClose }) => {
                                 <th className="border p-2">ID</th>
                                 <th className="border p-2">Fecha Creación</th>
                                 <th className="border p-2">Fecha Cita</th>
-                                <th className="border p-2">Paciente</th>
+                                <th className="border p-2">Cliente</th>
                                 <th className="border p-2">Estado</th>
                                 <th className="border p-2">Motivo</th>
                             </tr>

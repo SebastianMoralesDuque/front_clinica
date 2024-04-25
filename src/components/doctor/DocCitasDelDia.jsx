@@ -46,7 +46,7 @@ function DocCitasPend() {
                 <br />
                 <span className="block">Fecha de Creación: {cita.fechaCreacion}</span>
                 <span className="block">Fecha de Cita: {cita.fechaCita}</span>
-                <span className="block">Paciente: {cita.cedulaPaciente}</span>
+                <span className="block">Cliente: {cita.cedulaPaciente}</span>
                 <span className="block">Estado: {cita.estado}</span>
                 <span className="block">Motivo: {cita.motivo}</span>
                 <Link to={`/atenderCita/${cita.id}/${cita.cedulaPaciente}`}>

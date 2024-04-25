@@ -66,7 +66,7 @@ const loginDoctor = async (formData) => {
       console.log("desde servicvio");
 
       console.log(medicoData);
-      // Almacenar datos en el localStorage para el tipo "médico"
+      // Almacenar datos en el localStorage para el tipo "Trabajador"
       localStorage.setItem('userType', 'medico');
       localStorage.setItem('medicoData', JSON.stringify(medicoData));
 
@@ -75,7 +75,7 @@ const loginDoctor = async (formData) => {
       return false;
     }
   } catch (error) {
-    console.error('Error al iniciar sesión como médico:', error);
+    console.error('Error al iniciar sesión como Trabajador:', error);
     return false;
   }
 };

@@ -29,13 +29,13 @@ function HomePatient() {
   const [medicosDisponibles, setMedicosDisponibles] = useState({
     'Especialización 1': [
       { nombre: 'Dr. Juan Pérez', horarios: ['9:00 AM - 11:00 AM', '2:00 PM - 4:00 PM'] },
-      // Agrega más médicos y sus horarios según la especialización
+      // Agrega más Trabajadors y sus horarios según la especialización
     ],
     'Especialización 2': [
       { nombre: 'Dra. María González', horarios: ['10:00 AM - 12:00 PM', '3:00 PM - 5:00 PM'] },
-      // Agrega más médicos y sus horarios según la especialización
+      // Agrega más Trabajadors y sus horarios según la especialización
     ],
-    // Agrega más especializaciones y sus médicos disponibles
+    // Agrega más especializaciones y sus Trabajadors disponibles
   });
 
   const [horariosMedico, setHorariosMedico] = useState([]);
@@ -86,7 +86,7 @@ function HomePatient() {
       ...formularioCita,
       fecha: date,
     });
-    // Obtener los horarios disponibles del médico seleccionado para la fecha seleccionada
+    // Obtener los horarios disponibles del Trabajador seleccionado para la fecha seleccionada
     const medicoSeleccionado = formularioCita.medico;
     if (medicoSeleccionado) {
       const horarios = medicosDisponibles[formularioCita.especializacion].find(
@@ -102,7 +102,7 @@ function HomePatient() {
       ...formularioCita,
       [name]: value,
     });
-    // Si se cambia la especialización o el médico, resetear la fecha y los horarios
+    // Si se cambia la especialización o el Trabajador, resetear la fecha y los horarios
     if (name === 'especializacion' || name === 'medico') {
       setFechaSeleccionada(null);
       setHorariosMedico([]);
@@ -233,8 +233,8 @@ function HomePatient() {
                   <strong>ID: {cita.id}</strong><br />
                   <span className="block">Fecha de Creación: {cita.fechaCreacion}</span>
                   <span className="block">Fecha de Cita: {cita.fechaCita}</span>
-                  <span className="block">Médico: {cita.cedulaMedico}</span>
-                  <span className="block">Paciente: {cita.cedulaPaciente}</span>
+                  <span className="block">Trabajador: {cita.cedulaMedico}</span>
+                  <span className="block">Cliente: {cita.cedulaPaciente}</span>
                   <span className="block">Estado: {cita.estado}</span>
                   <span className="block">Motivo: {cita.motivo}</span>
 
@@ -275,8 +275,8 @@ function HomePatient() {
                 <strong>ID: {cita.id}</strong><br />
                 <span className="block">Fecha de Creación: {cita.fechaCreacion}</span>
                 <span className="block">Fecha de Cita: {cita.fechaCita}</span>
-                <span className="block">Médico: {cita.cedulaMedico}</span>
-                <span className="block">Paciente: {cita.cedulaPaciente}</span>
+                <span className="block">Trabajador: {cita.cedulaMedico}</span>
+                <span className="block">Cliente: {cita.cedulaPaciente}</span>
                 <span className="block">Estado: {cita.estado}</span>
                 <span className="block">Motivo: {cita.motivo}</span>
                 <button

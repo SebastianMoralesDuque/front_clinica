@@ -11,7 +11,7 @@ const DoctorDayOffModal = ({ closeModal }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Aquí puedes agregar la lógica para registrar el día libre del médico.
+    // Aquí puedes agregar la lógica para registrar el día libre del Trabajador.
     // Por ejemplo, puedes enviar una solicitud al servidor para guardar la fecha.
     // Luego, cierra el modal si la operación es exitosa o muestra un mensaje de error.
     console.log('Formulario enviado para registrar día libre');

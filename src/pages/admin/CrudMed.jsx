@@ -24,10 +24,10 @@ function CrudMed() {
                 const data = await response.json();
                 setMedicoData(data);
             } else {
-                console.error('Error al obtener datos de médicos');
+                console.error('Error al obtener datos de Trabajadors');
             }
         } catch (error) {
-            console.error('Error en la solicitud para obtener datos de médicos:', error);
+            console.error('Error en la solicitud para obtener datos de Trabajadors:', error);
         }
     };
 
@@ -89,7 +89,7 @@ function CrudMed() {
 
     return (
         <div className="p-8">
-            <h2 className="text-2xl mb-6 text-center">Listado de médicos</h2>
+            <h2 className="text-2xl mb-6 text-center">Listado de Trabajadores</h2>
 
             <div>
                 <Link to="/" className="mb-4 mr-4 inline-block bg-blue-500 text-white px-4 py-2 rounded">
@@ -97,7 +97,7 @@ function CrudMed() {
                 </Link>
 
                 <Link to="/createmedico" className="mb-4 inline-block bg-blue-500 text-white px-4 py-2 rounded">
-                    Registrar Médico
+                    Registrar Trabajador
                 </Link>
             </div>
 
@@ -118,7 +118,7 @@ function CrudMed() {
                     {medicoData.map((medico, index) => (
                         <tr key={index} className="items-center">
                             <td className="px-4 py-8 flex items-center justify-center">
-                                {medico[0].url_foto && <img src={medico[0].url_foto} alt="Foto del médico" className="w-16 h-16" />}
+                                {medico[0].url_foto && <img src={medico[0].url_foto} alt="Foto del Trabajador" className="w-16 h-16" />}
                                 {!medico[0].url_foto && "Sin foto"}
                             </td>
                             <td className="border border-gray-300 px-4 py-2">{medico[0].cedula}</td>
@@ -167,7 +167,7 @@ function CrudMed() {
                     <div className="modal-container">
                         <div className="bg-white rounded shadow-lg w-1/2 mx-auto">
                             <div className="modal-content py-4 text-left px-6">
-                                <h2 className="text-2xl mb-6">Editar Médico</h2>
+                                <h2 className="text-2xl mb-6">Editar Trabajador</h2>
 
                                 <form>
                                     <div className="mb-4">
