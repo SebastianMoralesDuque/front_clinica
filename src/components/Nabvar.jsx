@@ -20,7 +20,7 @@ const Navbar = () => {
       <div>
         {/* Enlace a la página de inicio */}
         <Link to="/" className="text-white text-2xl font-semibold">
-          Clínica San Gabriel
+          Cosmetica Coco Pink
         </Link>
       </div>
       <ul className="flex space-x-4 items-center">
